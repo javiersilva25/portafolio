@@ -1,0 +1,20 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="profile" [routerLink]="['/home/profile']">
+      <ion-icon name="person-outline"></ion-icon>
+      <ion-label>Profile</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="training" [routerLink]="['/home/training']">
+      <ion-icon name="barbell-outline"></ion-icon>
+      <ion-label>Training</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="macros" [routerLink]="['/home/macros']">
+      <ion-icon name="nutrition-outline"></ion-icon>
+      <ion-label>Macros</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+
+  <ion-router-outlet></ion-router-outlet>
+</ion-tabs>

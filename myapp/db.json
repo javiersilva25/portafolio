@@ -1,0 +1,22 @@
+{
+  "foods": [
+    {
+      "id": "1fc4",
+      "nombre": "Oats",
+      "calorias": "380",
+      "proteinas": 16,
+      "carbohidratos": 65,
+      "grasas": 8
+    },
+    {
+      "id": "3453",
+      "nombre": "Tofu",
+      "calorias": "119",
+      "proteinas": 11,
+      "carbohidratos": 3,
+      "grasas": 6
+    }
+  ],
+  "exercises": [],
+  "users": []
+}
