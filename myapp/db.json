@@ -1,5 +1,30 @@
 {
-  "foods": [],
+  "foods": [
+    {
+      "nombre": "Avena",
+      "calorias": "360",
+      "proteinas": 16,
+      "carbohidratos": 65,
+      "grasas": 8,
+      "id": "0e7c"
+    },
+    {
+      "id": "df92",
+      "nombre": "Tofu",
+      "calorias": "150",
+      "proteinas": 12,
+      "carbohidratos": 3,
+      "grasas": 6
+    },
+    {
+      "nombre": "Lentejas",
+      "calorias": "325",
+      "proteinas": 25,
+      "carbohidratos": 54,
+      "grasas": 6,
+      "id": "83f1"
+    }
+  ],
   "exercises": [],
   "users": []
 }

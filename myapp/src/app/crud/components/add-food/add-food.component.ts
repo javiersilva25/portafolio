@@ -25,10 +25,21 @@ export class AddFoodComponent {
       (res) => {
         console.log('Alimento agregado:', res);
         alert('Alimento agregado correctamente');
+        this.resetFormulario()
       },
       (err) => {
         console.error('Error al agregar alimento:', err);
       }
     );
+  }
+
+  resetFormulario() {
+    this.nuevoAlimento = {
+      nombre: '',
+      calorias: 0,
+      proteinas: 0,
+      carbohidratos: 0,
+      grasas: 0
+    };
   }
 }

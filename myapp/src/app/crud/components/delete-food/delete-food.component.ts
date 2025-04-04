@@ -34,6 +34,7 @@ export class DeleteFoodComponent implements OnInit {
       this.api.deleteFood(this.alimentoSeleccionadoId).subscribe(
         (response) => {
           console.log('Alimento eliminado exitosamente', response);
+          this.resetFormulario()
           this.cargarAlimentos(); // refresca la lista
           this.router.navigate(['/macros/deleteFood']); // o quedarte donde estás
         },
@@ -44,5 +45,9 @@ export class DeleteFoodComponent implements OnInit {
     } else {
       console.error('No se ha seleccionado ningún alimento');
     }
+  }
+
+  resetFormulario() {
+    this.alimentoSeleccionadoId = '';
   }
 }

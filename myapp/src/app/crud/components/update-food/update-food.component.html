@@ -1,3 +1,38 @@
-<p>
-  update-food works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editar Alimento</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Selecciona un alimento</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-select [(ngModel)]="alimentoId" placeholder="Seleccionar alimento">
+          <ion-select-option *ngFor="let alimento of alimentos" [value]="alimento.id">
+            {{ alimento.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-button (click)="cargarDatos()">
+        Cargar datos
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-input labelPlacement="stacked" label="Nombre" [(ngModel)]="alimentoNuevo.nombre"></ion-input>
+    <ion-input labelPlacement="stacked" label="Calorías" type="number" [(ngModel)]="alimentoNuevo.calorias"></ion-input>
+    <ion-input labelPlacement="stacked" label="Proteínas" type="number" [(ngModel)]="alimentoNuevo.proteinas"></ion-input>
+    <ion-input labelPlacement="stacked" label="Carbohidratos" type="number" [(ngModel)]="alimentoNuevo.carbohidratos"></ion-input>
+    <ion-input labelPlacement="stacked" label="Grasas" type="number" [(ngModel)]="alimentoNuevo.grasas"></ion-input>
+  </ion-card>
+
+  <ion-button expand="block" (click)="editarAlimento()">
+    Guardar
+  </ion-button>
+</ion-content>
