@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Eliminar Ejercicio</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Selecciona un ejercicio</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-select [(ngModel)]="ejercicioSeleccionadoId" placeholder="Seleccionar ejercicio">
+          <ion-select-option *ngFor="let ejercicio of ejercicios" [value]="ejercicio.id">
+            {{ ejercicio.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" color="danger" (click)="eliminarEjercicio()">
+    Eliminar
+  </ion-button>
+</ion-content>

@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Exercise</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="agregarEjercicio()">
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Name</ion-label>
+        <ion-input [(ngModel)]="nuevoEjercicio.nombre" name="nombre" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Video URL</ion-label>
+        <ion-input type="url" [(ngModel)]="nuevoEjercicio.video_url" name="video_url"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" type="submit">Add</ion-button>
+    </ion-list>
+  </form>
+</ion-content>

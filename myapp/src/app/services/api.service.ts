@@ -33,4 +33,33 @@ export class ApiService {
   deleteFood(id: string) {
     return this.http.delete(`${this.apiURL}/foods/${id}`);
   }
+  
+  // MÉTODOS GET EXERCISES
+
+  getAllExercises() {
+    return this.http.get(`${this.apiURL}/exercises`);
+  }
+  
+  getExercise(id: string) {
+    return this.http.get(`${this.apiURL}/exercises/${id}`);
+  }
+  
+  // MÉTODOS CRUD EXERCISES
+
+  addExercise(ejercicio: any) {
+    return this.http.post(`${this.apiURL}/exercises`, ejercicio);
+  }
+
+  updateExercise(id: string, ejercicio: any) {
+    return this.http.put(`${this.apiURL}/exercises/${id}`, ejercicio);
+  }
+  
+  deleteExercise(id: string) {
+    return this.http.delete(`${this.apiURL}/exercises/${id}`);
+  }
+  
+
+
 }
+
+
