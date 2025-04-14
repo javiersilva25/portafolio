@@ -1,10 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+
+export interface Food {
+  nombre: string;
+  cantidad: number;
+  medida: string;
+  proteinas: number;
+  grasas: number;
+  carbohidratos: number;
+  calorias: number;
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+
 
   apiURL = 'http://localhost:8000';
 
