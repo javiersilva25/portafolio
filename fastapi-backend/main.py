@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-import uuid
 
 from database import SessionLocal, engine
 import models, schemas
@@ -34,7 +33,7 @@ def get_all_foods(db: Session = Depends(get_db)):
     return db.query(models.Food).all()
 
 @app.get("/foods/{food_id}", response_model=schemas.Food)
-def get_food(food_id: str, db: Session = Depends(get_db)):
+def get_food(food_id: int, db: Session = Depends(get_db)):
     food = db.query(models.Food).filter(models.Food.id == food_id).first()
     if not food:
         raise HTTPException(status_code=404, detail="Alimento no encontrado")
@@ -42,31 +41,32 @@ def get_food(food_id: str, db: Session = Depends(get_db)):
 
 @app.post("/foods", response_model=schemas.Food)
 def add_food(food: schemas.FoodCreate, db: Session = Depends(get_db)):
-    food_id = str(uuid.uuid4())[:4]
-    new_food = models.Food(id=food_id, **food.dict())
+    new_food = models.Food(**food.dict())
     db.add(new_food)
     db.commit()
     db.refresh(new_food)
     return new_food
 
 @app.put("/foods/{food_id}", response_model=schemas.Food)
-def update_food(food_id: str, updated: schemas.FoodCreate, db: Session = Depends(get_db)):
+def update_food(food_id: int, updated: schemas.FoodCreate, db: Session = Depends(get_db)):
     food = db.query(models.Food).filter(models.Food.id == food_id).first()
     if not food:
         raise HTTPException(status_code=404, detail="No encontrado")
     for key, value in updated.dict().items():
         setattr(food, key, value)
     db.commit()
+    db.refresh(food)
     return food
 
 @app.delete("/foods/{food_id}")
-def delete_food(food_id: str, db: Session = Depends(get_db)):
+def delete_food(food_id: int, db: Session = Depends(get_db)):
     food = db.query(models.Food).filter(models.Food.id == food_id).first()
     if not food:
         raise HTTPException(status_code=404, detail="No encontrado")
     db.delete(food)
     db.commit()
     return {"detail": "Eliminado"}
+
 
 # ------------------- CRUD EXERCISES -------------------
 
@@ -75,7 +75,7 @@ def get_all_exercises(db: Session = Depends(get_db)):
     return db.query(models.Exercise).all()
 
 @app.get("/exercises/{exercise_id}", response_model=schemas.Exercise)
-def get_exercise(exercise_id: str, db: Session = Depends(get_db)):
+def get_exercise(exercise_id: int, db: Session = Depends(get_db)):
     exercise = db.query(models.Exercise).filter(models.Exercise.id == exercise_id).first()
     if not exercise:
         raise HTTPException(status_code=404, detail="Ejercicio no encontrado")
@@ -84,9 +84,10 @@ def get_exercise(exercise_id: str, db: Session = Depends(get_db)):
 @app.post("/exercises", response_model=schemas.Exercise)
 def create_exercise(exercise: schemas.ExerciseCreate, db: Session = Depends(get_db)):
     new_exercise = models.Exercise(
-        id=str(uuid.uuid4())[:8],
-        nombre=exercise.nombre,
-        video_url=exercise.video_url
+        descripcion=exercise.descripcion,
+        video=exercise.video,
+        id_training=exercise.id_training,
+        id_category=exercise.id_category
     )
     db.add(new_exercise)
     db.commit()
@@ -94,18 +95,19 @@ def create_exercise(exercise: schemas.ExerciseCreate, db: Session = Depends(get_
     return new_exercise
 
 @app.put("/exercises/{exercise_id}", response_model=schemas.Exercise)
-def update_exercise(exercise_id: str, updated: schemas.ExerciseCreate, db: Session = Depends(get_db)):
+def update_exercise(exercise_id: int, updated: schemas.ExerciseCreate, db: Session = Depends(get_db)):
     exercise = db.query(models.Exercise).filter(models.Exercise.id == exercise_id).first()
     if not exercise:
         raise HTTPException(status_code=404, detail="Ejercicio no encontrado")
-    exercise.nombre = updated.nombre
-    exercise.video_url = updated.video_url
+    
+    for key, value in updated.dict().items():
+        setattr(exercise, key, value)
     db.commit()
     db.refresh(exercise)
     return exercise
 
 @app.delete("/exercises/{exercise_id}")
-def delete_exercise(exercise_id: str, db: Session = Depends(get_db)):
+def delete_exercise(exercise_id: int, db: Session = Depends(get_db)):
     exercise = db.query(models.Exercise).filter(models.Exercise.id == exercise_id).first()
     if not exercise:
         raise HTTPException(status_code=404, detail="Ejercicio no encontrado")
