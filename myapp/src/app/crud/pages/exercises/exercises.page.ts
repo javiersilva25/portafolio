@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-exercises',
@@ -8,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExercisesPage implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+  }
+
+  segmentChanged(event: any) {
+    const value = event.detail.value;
+    this.router.navigate([`/ejercicios/${value}`]);
   }
 
 }

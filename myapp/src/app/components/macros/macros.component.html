@@ -1,3 +1,33 @@
-<p>
-  macros works!
-</p>
+<!-- ... contenido anterior ... -->
+
+<div *ngIf="showModal" class="modal-overlay">
+  <div class="modal-content">
+    <label>Nombre:</label>
+    <input [(ngModel)]="nuevoAlimento.nombre" type="text" />
+
+    <label>Cantidad:</label>
+    <input [(ngModel)]="nuevoAlimento.cantidad" type="number" />
+
+    <label>Medida:</label>
+    <select [(ngModel)]="nuevoAlimento.medida">
+      <option value="gramos">gramos</option>
+      <option value="ml">ml</option>
+      <option value="unidad">unidad</option>
+    </select>
+
+    <label>Proteínas (g):</label>
+    <input type="number" [(ngModel)]="nuevoAlimento.proteinas" (input)="calcularCalorias()" />
+
+    <label>Grasas (g):</label>
+    <input type="number" [(ngModel)]="nuevoAlimento.grasas" (input)="calcularCalorias()" />
+
+    <label>Carbohidratos (g):</label>
+    <input type="number" [(ngModel)]="nuevoAlimento.carbohidratos" (input)="calcularCalorias()" />
+
+    <label>Calorías (calculadas):</label>
+    <input type="number" [(ngModel)]="nuevoAlimento.calorias" readonly />
+
+    <ion-button expand="block" (click)="agregarAlimento()">Agregar</ion-button>
+    <ion-button expand="block" color="danger" (click)="cancelar()">Cancelar</ion-button>
+  </div>
+</div>
