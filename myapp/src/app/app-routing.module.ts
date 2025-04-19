@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth-guard.guard';
 
 const routes: Routes = [
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: '',
@@ -13,12 +15,22 @@ const routes: Routes = [
   },
   {
     path: 'macros',
-    loadChildren: () => import('./crud/pages/macros/macros.module').then( m => m.MacrosPageModule)
+    loadChildren: () => import('./crud/pages/macros/macros.module').then(m => m.MacrosPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'exercises',
-    loadChildren: () => import('./crud/pages/exercises/exercises.module').then( m => m.ExercisesPageModule)
+    loadChildren: () => import('./crud/pages/exercises/exercises.module').then(m => m.ExercisesPageModule),
+    canActivate: [AuthGuard]
   },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule)
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule)
+  }
 ];
 
 @NgModule({
@@ -27,4 +39,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
