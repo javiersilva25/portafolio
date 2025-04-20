@@ -1,20 +1,22 @@
-<ion-tabs>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="profile" [routerLink]="['/home/profile']">
-      <ion-icon name="person-outline"></ion-icon>
-      <ion-label>Profile</ion-label>
-    </ion-tab-button>
-
-    <ion-tab-button tab="training" [routerLink]="['/home/training']">
-      <ion-icon name="barbell-outline"></ion-icon>
-      <ion-label>Training</ion-label>
-    </ion-tab-button>
-
-    <ion-tab-button tab="macros" [routerLink]="['/home/macros']">
-      <ion-icon name="nutrition-outline"></ion-icon>
-      <ion-label>Macros</ion-label>
-    </ion-tab-button>
-  </ion-tab-bar>
-
+<ion-content class="ion-padding-bottom">
   <ion-router-outlet></ion-router-outlet>
-</ion-tabs>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-segment (ionChange)="segmentChanged($event)" class="custom-segment-tabs" value="profile">
+      <ion-segment-button value="profile">
+        <ion-icon name="person-outline" size="large"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="training">
+        <ion-icon name="barbell-outline" size="large"></ion-icon>
+        <ion-label>Entrenamiento</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="macros">
+        <ion-icon name="nutrition-outline" size="large"></ion-icon>
+        <ion-label>Macros</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-footer>
