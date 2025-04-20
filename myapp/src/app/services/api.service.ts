@@ -10,7 +10,7 @@ export interface Food {
   grasas: number;
   carbohidratos: number;
   calorias: number;
-
+}
 @Injectable({
   providedIn: 'root'
 })

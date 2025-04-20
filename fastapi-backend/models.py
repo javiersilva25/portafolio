@@ -4,7 +4,7 @@ from database import Base
 class Food(Base):
     __tablename__ = "foods"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id_food = Column(Integer, primary_key=True, index=True)
     descripcion = Column(String(80), index=True)
     calorias = Column(Float)
     carbohidratos = Column(Float)
@@ -25,7 +25,7 @@ class Exercise(Base):
 
 
 class Training(Base):
-    __tablename__ = "trainings"
+    __tablename__ = "training"
 
     id = Column(Integer, primary_key=True, index=True)
     descripcion = Column(String(80), index=True)
@@ -49,7 +49,7 @@ class Objective(Base):
     id = Column(Integer, primary_key=True, index=True)
     descripcion = Column(String(100))
     fecha = Column(Date)
-    id_usuario = Column(Integer, ForeignKey("users.id"))
+    id_user = Column(Integer, ForeignKey("users.id"))
 
 
 class Measurement(Base):
@@ -60,11 +60,11 @@ class Measurement(Base):
     nombre = Column(String(30))
     unidad_medida = Column(String(5))
     valor = Column(Float)
-    id_usuario = Column(Integer, ForeignKey("users.id"))
+    id_user = Column(Integer, ForeignKey("users.id"))
 
 
 class Category(Base):
-    __tablename__ = "categories"
+    __tablename__ = "category"
 
     id = Column(Integer, primary_key=True, index=True)
     descripcion = Column(String(60))

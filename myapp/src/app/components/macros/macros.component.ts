@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../services/api.service';
-import { Food } from '../models/food.model';
+import { ApiService } from 'src/app/services/api.service';
+import { Food } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-macros',
   templateUrl: './macros.component.html',
   styleUrls: ['./macros.component.scss'],
+  standalone:false
 })
 export class MacrosComponent implements OnInit {
   alimentos: Food[] = [];
@@ -20,8 +21,7 @@ export class MacrosComponent implements OnInit {
     proteinas: 0,
     grasas: 0,
     carbohidratos: 0,
-    calorias: 0,
-    imagen: ''
+    calorias: 0
   };
 
   constructor(private apiService: ApiService) {}
@@ -49,8 +49,7 @@ export class MacrosComponent implements OnInit {
       proteinas: 0,
       grasas: 0,
       carbohidratos: 0,
-      calorias: 0,
-      imagen: ''
+      calorias: 0
     };
     this.showModal = true;
   }

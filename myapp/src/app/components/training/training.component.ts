@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-training',
   templateUrl: './training.component.html',
   styleUrls: ['./training.component.scss'],
+  standalone: false
 })
 export class TrainingComponent  implements OnInit {
 
