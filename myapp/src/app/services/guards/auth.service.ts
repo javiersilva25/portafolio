@@ -43,4 +43,12 @@ export class AuthService {
   estaAutenticado(): boolean {
     return !!this.obtenerToken();
   }
+
+  obtenerRol(): string | null {
+    const token = this.obtenerToken();
+    if (!token) return null;
+  
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.role || null;
+  }
 }

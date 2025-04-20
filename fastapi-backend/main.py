@@ -1,15 +1,20 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+from datetime import datetime, timedelta
 
 from database import SessionLocal, engine
 import models, schemas
 
+# Crear las tablas
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# CORS para permitir que Ionic se conecte
+# Configuración CORS (para permitir conexión con Ionic)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:8100"],
@@ -18,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Obtener sesión de DB
+# Dependencia para obtener sesión de DB
 def get_db():
     db = SessionLocal()
     try:
@@ -26,7 +31,62 @@ def get_db():
     finally:
         db.close()
 
-# ------------------- CRUD FOODS -------------------
+# =======================
+# AUTENTICACIÓN Y USUARIO
+# =======================
+
+SECRET_KEY = "supersecreta"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(password: str):
+    return pwd_context.hash(password)
+
+def verify_password(plain: str, hashed: str):
+    return pwd_context.verify(plain, hashed)
+
+def create_access_token(data: dict, expires_delta: timedelta = None):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+@app.post("/register")
+def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    user_exists = db.query(models.User).filter(models.User.email == user.email).first()
+    if user_exists:
+        raise HTTPException(status_code=400, detail="El usuario ya existe")
+
+    new_user = models.User(
+        nombre=user.nombre,
+        correo=user.email,
+        contrasena=hash_password(user.password),
+        role="user"
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return {"msg": "Usuario creado correctamente"}
+
+@app.post("/login")
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.correo == form_data.username).first()
+    if not user or not verify_password(form_data.password, user.contrasena):
+        raise HTTPException(status_code=401, detail="Credenciales incorrectas")
+
+    token_data = {
+        "sub": user.correo,
+        "role": user.role
+    }
+
+    access_token = create_access_token(token_data)
+    return {"access_token": access_token, "token_type": "bearer"}
+
+# ========================
+# CRUD FOODS
+# ========================
 
 @app.get("/foods", response_model=list[schemas.Food])
 def get_all_foods(db: Session = Depends(get_db)):
@@ -67,8 +127,9 @@ def delete_food(food_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"detail": "Eliminado"}
 
-
-# ------------------- CRUD EXERCISES -------------------
+# ========================
+# CRUD EXERCISES
+# ========================
 
 @app.get("/exercises", response_model=list[schemas.Exercise])
 def get_all_exercises(db: Session = Depends(get_db)):
@@ -99,7 +160,6 @@ def update_exercise(exercise_id: int, updated: schemas.ExerciseCreate, db: Sessi
     exercise = db.query(models.Exercise).filter(models.Exercise.id == exercise_id).first()
     if not exercise:
         raise HTTPException(status_code=404, detail="Ejercicio no encontrado")
-    
     for key, value in updated.dict().items():
         setattr(exercise, key, value)
     db.commit()

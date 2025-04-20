@@ -13,7 +13,6 @@ class Food(Base):
     id_usuario = Column(Integer, ForeignKey("users.id"))
 
 
-
 class Exercise(Base):
     __tablename__ = "exercises"
 
@@ -41,6 +40,7 @@ class User(Base):
     correo = Column(String(60), unique=True, index=True)
     telefono = Column(String(12))
     fec_nac = Column(Date)
+    role = Column(String(10), default="user")  # ✅ AÑADIDO
 
 
 class Objective(Base):
@@ -68,5 +68,3 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     descripcion = Column(String(60))
-
-

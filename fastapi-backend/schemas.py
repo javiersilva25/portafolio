@@ -12,7 +12,7 @@ class FoodBase(BaseModel):
     grasas: float
 
 class FoodCreate(FoodBase):
-    id_usuario: int  # clave foránea
+    id_usuario: int
 
 class Food(FoodBase):
     id: int
@@ -85,6 +85,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+    role: str  # ✅ AÑADIDO
 
     class Config:
         orm_mode = True

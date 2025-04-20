@@ -16,12 +16,14 @@ const routes: Routes = [
   {
     path: 'macros',
     loadChildren: () => import('./crud/pages/macros/macros.module').then(m => m.MacrosPageModule),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { role: 'admin' }
   },
   {
     path: 'exercises',
     loadChildren: () => import('./crud/pages/exercises/exercises.module').then(m => m.ExercisesPageModule),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { role: 'admin' }
   },
   {
     path: 'login',
@@ -32,6 +34,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule)
   }
 ];
+
 
 @NgModule({
   imports: [
