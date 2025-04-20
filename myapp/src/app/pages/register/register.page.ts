@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
+  standalone: false
 })
 export class RegisterPage {
   nombre = '';

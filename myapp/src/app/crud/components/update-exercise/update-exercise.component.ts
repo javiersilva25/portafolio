@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { Router } from '@angular/router';
 
@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   selector: 'app-update-exercise',
   templateUrl: './update-exercise.component.html',
   styleUrls: ['./update-exercise.component.scss'],
-  standalone: false
+  standalone: false,
 })
 export class UpdateExerciseComponent implements OnInit {
   ejercicios: any[] = [];

@@ -1,3 +1,27 @@
-<p>
-  profile works!
-</p>
+<ion-card class="user-card">
+  <ion-card-header>
+    <ion-avatar slot="start">
+      <img src="https://www.gravatar.com/avatar?d=mp" />
+    </ion-avatar>
+    <ion-card-title>
+      <ng-container *ngIf="!editing">{{ user.nombre }}</ng-container>
+      <ion-input *ngIf="editing" [(ngModel)]="updatedUser.nombre" placeholder="Nombre"></ion-input>
+    </ion-card-title>
+    <ion-card-subtitle>
+      <div *ngIf="!editing">
+        correo: {{ user.correo }}<br>
+      </div>
+      <div *ngIf="editing">
+        <ion-input [(ngModel)]="updatedUser.correo" placeholder="Correo"></ion-input>
+      </div>
+      rutinas realizadas: {{ user.rutinasRealizadas }}
+    </ion-card-subtitle>
+    <ion-button fill="clear" size="small" slot="end" (click)="toggleEdit()">
+      <ion-icon name="create-outline"></ion-icon>
+    </ion-button>
+  </ion-card-header>
+
+  <ion-card-content *ngIf="editing">
+    <ion-button expand="full" color="success" (click)="guardarCambios()">Guardar cambios</ion-button>
+  </ion-card-content>
+</ion-card>
