@@ -1,18 +1,15 @@
 <ion-content class="ion-padding">
 
-  <!-- Fecha -->
   <ion-item>
     <ion-label>Fecha</ion-label>
     <ion-datetime [(ngModel)]="fechaSeleccionada" presentation="date" size="cover"></ion-datetime>
   </ion-item>
 
-  <!-- Resumen -->
   <h2>Resumen Diario</h2>
   <p>
     Total: {{ getCaloriasTotales(desayuno) + getCaloriasTotales(almuerzo) + getCaloriasTotales(cena) }} / {{ objetivoCalorias }} kcal
   </p>
 
-  <!-- Secciones de comidas -->
   <ion-card>
     <ion-card-header>
       <ion-card-title>Desayuno</ion-card-title>
@@ -28,8 +25,6 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Repetir para almuerzo y cena -->
-  <!-- Almuerzo -->
   <ion-card>
     <ion-card-header>
       <ion-card-title>Almuerzo</ion-card-title>
@@ -45,7 +40,6 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Cena -->
   <ion-card>
     <ion-card-header>
       <ion-card-title>Cena</ion-card-title>
@@ -61,7 +55,6 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Modal edición -->
   <div *ngIf="alimentoEditando" class="modal-overlay">
     <div class="modal-content">
       <h3>Editar alimento</h3>
@@ -76,12 +69,10 @@
     </div>
   </div>
 
-  <!-- MODAL BIBLIOTECA -->
   <div *ngIf="showBiblioteca" class="modal-overlay">
     <div class="modal-content">
       <h3>Biblioteca de alimentos</h3>
 
-      <!-- ion-select -->
       <ion-item>
         <ion-label>Seleccionar alimento</ion-label>
         <ion-select placeholder="Elegir de la base" [(ngModel)]="alimentoSeleccionado">
@@ -92,7 +83,6 @@
       </ion-item>
       <ion-button expand="block" (click)="agregarDesdeSelect()">Agregar seleccionado</ion-button>
 
-      <!-- Lista visual -->
       <ion-list>
         <ion-item *ngFor="let alimento of biblioteca" (click)="seleccionarAlimentoVisual(alimento)">
           <ion-label>{{ alimento.descripcion }} - {{ alimento.calorias }} kcal</ion-label>
