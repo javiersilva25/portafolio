@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 
 
 export interface Food {
-  nombre: string;
+  descripcion: string;
   cantidad: number;
   medida: string;
   proteinas: number;
   grasas: number;
   carbohidratos: number;
   calorias: number;
+  id_usuario: number;
 }
 @Injectable({
   providedIn: 'root'

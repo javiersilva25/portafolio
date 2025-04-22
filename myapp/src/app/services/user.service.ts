@@ -11,11 +11,11 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getUserProfile() {
-    return this.http.get(`${this.apiUrl}/users/me`);
+  getUserProfile(correo: string) {
+    return this.http.get(`${this.apiUrl}/user/${correo}`);
   }
 
   updateProfile(data: any) {
-    return this.http.put(`${this.apiUrl}/users/me`, data);
+    return this.http.put(`${this.apiUrl}/user/me`, data);
   }
 }

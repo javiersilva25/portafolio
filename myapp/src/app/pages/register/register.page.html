@@ -4,11 +4,17 @@
       <ion-card-title>Crear cuenta</ion-card-title>
     </ion-card-header>
     <ion-card-content>
+
       <ion-input label="Nombre" [(ngModel)]="nombre" type="text"></ion-input>
-      <ion-input label="Email" [(ngModel)]="email" type="email"></ion-input>
-      <ion-input label="Contraseña" [(ngModel)]="password" type="password"></ion-input>
+      <ion-input label="Apellido" [(ngModel)]="apellido" type="text"></ion-input>
+      <ion-input label="Correo" [(ngModel)]="correo" type="email"></ion-input>
+      <ion-input label="Teléfono" [(ngModel)]="telefono" type="tel"></ion-input>
+      <ion-input label="Fecha de nacimiento" [(ngModel)]="fec_nac" type="date"></ion-input>
+      <ion-input label="Contraseña" [(ngModel)]="contrasena" type="password"></ion-input>
+
       <ion-button expand="block" (click)="registrar()">Registrarse</ion-button>
       <ion-button expand="block" fill="clear" routerLink="/login">¿Ya tienes cuenta?</ion-button>
+
     </ion-card-content>
   </ion-card>
 </ion-content>

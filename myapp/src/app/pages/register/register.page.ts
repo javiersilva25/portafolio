@@ -9,15 +9,29 @@ import { Router } from '@angular/router';
 })
 export class RegisterPage {
   nombre = '';
-  email = '';
-  password = '';
+  correo = '';
+  contrasena = '';
+  apellido = '';
+  telefono = '';
+  fec_nac = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
   registrar() {
-    this.authService.register(this.nombre, this.email, this.password).subscribe({
+
+    const data = {
+      nombre: this.nombre,
+      apellido: this.apellido,
+      contrasena: this.contrasena,
+      correo: this.correo,
+      telefono: this.telefono,
+      fec_nac: this.fec_nac,
+      role: "user"
+    };
+
+    this.authService.register(data).subscribe({
       next: () => {
-        alert('Registro exitoso. Iniciá sesión.');
+        alert('Registro exitoso. Inicia sesión.');
         this.router.navigate(['/login']);
       },
       error: (err) => {

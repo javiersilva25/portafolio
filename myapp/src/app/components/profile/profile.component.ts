@@ -38,16 +38,18 @@ export class ProfileComponent implements OnInit {
     private router: Router
   ) { }
 
+  correo: string = this.authService.getCorreoUsuario() || '';
+
   ngOnInit() {
     this.cargarPerfil();
   }
 
   cargarPerfil() {
-    this.userService.getUserProfile().subscribe((data: any) => {
+    this.userService.getUserProfile(this.correo).subscribe((data: any) => {
       this.user = {
-        nombre: data.name || 'Usuario',
-        correo: data.email || 'correo@example.com',
-        rutinasRealizadas: data.routinesDone || 0
+        nombre: data.nombre || 'Usuario',
+        correo: data.correo || 'correo@example.com',
+        rutinasRealizadas: data.routinesDone || 0 //CAMBIAR, NO ESTÁ EN TABLA DE USUARIO
       };
       this.updatedUser = { ...this.user };
     });

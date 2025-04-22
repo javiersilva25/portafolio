@@ -4,7 +4,7 @@ from database import Base
 class Food(Base):
     __tablename__ = "foods"
 
-    id_food = Column(Integer, primary_key=True, index=True)
+    id_food = Column(Integer, primary_key=True, index=True, autoincrement=True)
     descripcion = Column(String(80), index=True)
     calorias = Column(Float)
     carbohidratos = Column(Float)

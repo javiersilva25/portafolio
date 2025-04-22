@@ -17,6 +17,9 @@ export class LoginPage {
     this.authService.login(this.email, this.password).subscribe({
       next: (res: any) => {
         this.authService.guardarToken(res.access_token);
+
+        localStorage.setItem('userEmail', this.email);
+
         this.router.navigate(['/home']); // o cualquier ruta privada
       },
       error: () => {

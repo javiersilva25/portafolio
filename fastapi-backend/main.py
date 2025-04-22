@@ -55,21 +55,24 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
 
 @app.post("/register")
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    user_exists = db.query(models.User).filter(models.User.email == user.email).first()
+    user_exists = db.query(models.User).filter(models.User.correo == user.correo).first()
     if user_exists:
         raise HTTPException(status_code=400, detail="El usuario ya existe")
 
     new_user = models.User(
         nombre=user.nombre,
-        correo=user.email,
-        contrasena=hash_password(user.password),
+        apellido=user.apellido,
+        correo=user.correo,
+        telefono=user.telefono,
+        fec_nac=user.fec_nac,
+        contrasena=hash_password(user.contrasena),
         role="user"
     )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return {"msg": "Usuario creado correctamente"}
-
+            
 @app.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.correo == form_data.username).first()
@@ -101,7 +104,14 @@ def get_food(food_id: int, db: Session = Depends(get_db)):
 
 @app.post("/foods", response_model=schemas.Food)
 def add_food(food: schemas.FoodCreate, db: Session = Depends(get_db)):
-    new_food = models.Food(**food.dict())
+    new_food = models.Food(
+        descripcion = food.descripcion,
+        calorias = food.calorias,
+        proteinas = food.proteinas,
+        grasas = food.grasas,
+        carbohidratos = food.carbohidratos,
+        id_usuario = 2
+    )
     db.add(new_food)
     db.commit()
     db.refresh(new_food)
@@ -174,3 +184,14 @@ def delete_exercise(exercise_id: int, db: Session = Depends(get_db)):
     db.delete(exercise)
     db.commit()
     return {"detail": "Ejercicio eliminado"}
+
+@app.get("/user/{correo}", response_model=schemas.UserResponse)
+def get_user_data(correo: str, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.correo == correo).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    return {
+        "nombre": user.nombre,
+        "correo": user.correo
+    }

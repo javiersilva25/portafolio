@@ -1,9 +1,25 @@
-<!-- ... contenido anterior ... -->
+<ion-content class="fondo-oscuro">
+  <div class="calorias-box">
+    <h3>Calorías diarias</h3>
+    <h1>{{ caloriasTotales }} kcal / {{ objetivoCalorias }} kcal</h1>
+  </div>
+
+  <div *ngFor="let alimento of alimentos" class="alimento-box">
+    <h4>{{ alimento.descripcion }} ({{ alimento.cantidad }} {{ alimento.medida }})</h4>
+    <p>Proteínas: {{ alimento.proteinas }}g</p>
+    <p>Grasas: {{ alimento.grasas }}g</p>
+    <p>Carbohidratos: {{ alimento.carbohidratos }}g</p>
+    <p>Calorías: {{ alimento.calorias }}kcal</p>
+  </div>
+
+  <ion-button expand="full" (click)="abrirModal()">Agregar alimento</ion-button>
+
+  <!-- MODAL -->
 
 <div *ngIf="showModal" class="modal-overlay">
   <div class="modal-content">
     <label>Nombre:</label>
-    <input [(ngModel)]="nuevoAlimento.nombre" type="text" />
+    <input [(ngModel)]="nuevoAlimento.descripcion" type="text" />
 
     <label>Cantidad:</label>
     <input [(ngModel)]="nuevoAlimento.cantidad" type="number" />

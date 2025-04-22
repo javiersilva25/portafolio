@@ -15,8 +15,7 @@ class FoodCreate(FoodBase):
     id_usuario: int
 
 class Food(FoodBase):
-    id: int
-    id_usuario: int
+    id_food: int
 
     class Config:
         orm_mode = True
@@ -79,16 +78,21 @@ class UserBase(BaseModel):
     correo: str
     telefono: str
     fec_nac: date
+    role: str
 
 class UserCreate(UserBase):
     contrasena: str
 
 class User(UserBase):
     id: int
-    role: str  # ✅ AÑADIDO
+    role: str
 
     class Config:
         orm_mode = True
+
+class UserResponse(BaseModel):
+    nombre: str
+    correo: str
 
 
 # ----------- OBJECTIVE -----------

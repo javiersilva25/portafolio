@@ -15,13 +15,14 @@ export class MacrosComponent implements OnInit {
 
   showModal = false;
   nuevoAlimento: Food = {
-    nombre: '',
+    descripcion: '',
     cantidad: 0,
     medida: 'gramos',
     proteinas: 0,
     grasas: 0,
     carbohidratos: 0,
-    calorias: 0
+    calorias: 0,
+    id_usuario: 2 // DEBE SER ID DE USUARIO ACTUAL
   };
 
   constructor(private apiService: ApiService) {}
@@ -43,13 +44,14 @@ export class MacrosComponent implements OnInit {
 
   abrirModal() {
     this.nuevoAlimento = {
-      nombre: '',
+      descripcion: '',
       cantidad: 0,
       medida: 'gramos',
       proteinas: 0,
       grasas: 0,
       carbohidratos: 0,
-      calorias: 0
+      calorias: 0,
+      id_usuario: 2 // DEBE SER ID DE USUARIO ACTUAL
     };
     this.showModal = true;
   }
@@ -62,6 +64,7 @@ export class MacrosComponent implements OnInit {
   }
 
   agregarAlimento() {
+    console.log(this.nuevoAlimento);
     this.apiService.addFood(this.nuevoAlimento).subscribe(() => {
       this.obtenerAlimentos();
       this.showModal = false;

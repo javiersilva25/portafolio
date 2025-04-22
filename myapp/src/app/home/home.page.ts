@@ -15,7 +15,7 @@ export class HomePage {
     console.log($event.detail.value);
     let direction = $event.detail.value;
     
-    this.router.navigate(['macros/' + direction]);
+    this.router.navigate(['home/' + direction]);
   }
 
 }

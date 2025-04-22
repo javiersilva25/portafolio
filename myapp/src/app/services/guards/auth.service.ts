@@ -19,12 +19,9 @@ export class AuthService {
     });
   }
 
-  register(nombre: string, email: string, password: string) {
-    return this.http.post(`${this.apiURL}/register`, {
-      nombre,
-      email,
-      password
-    });
+  register(data: any) {
+    console.log(data);
+    return this.http.post(`${this.apiURL}/register`, data);
   }
 
   guardarToken(token: string) {
@@ -50,5 +47,9 @@ export class AuthService {
   
     const payload = JSON.parse(atob(token.split('.')[1]));
     return payload.role || null;
+  }
+
+  getCorreoUsuario(): string | null {
+    return localStorage.getItem('userEmail');
   }
 }
