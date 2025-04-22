@@ -1,49 +1,115 @@
-<ion-content class="fondo-oscuro">
-  <div class="calorias-box">
-    <h3>Calorías diarias</h3>
-    <h1>{{ caloriasTotales }} kcal / {{ objetivoCalorias }} kcal</h1>
+<ion-content class="ion-padding">
+
+  <!-- Fecha -->
+  <ion-item>
+    <ion-label>Fecha</ion-label>
+    <ion-datetime [(ngModel)]="fechaSeleccionada" presentation="date" size="cover"></ion-datetime>
+  </ion-item>
+
+  <!-- Resumen -->
+  <h2>Resumen Diario</h2>
+  <p>
+    Total: {{ getCaloriasTotales(desayuno) + getCaloriasTotales(almuerzo) + getCaloriasTotales(cena) }} / {{ objetivoCalorias }} kcal
+  </p>
+
+  <!-- Secciones de comidas -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Desayuno</ion-card-title>
+      <ion-button size="small" (click)="abrirBiblioteca('desayuno')">+ Agregar</ion-button>
+    </ion-card-header>
+    <ion-card-content>
+      <div *ngFor="let a of desayuno">
+        <p><strong>{{ a.descripcion }}</strong> - {{ a.calorias }} kcal</p>
+        <ion-button size="small" fill="clear" (click)="editarAlimento(a)">✏️</ion-button>
+        <ion-button size="small" fill="clear" color="danger" (click)="eliminarAlimento('desayuno', a)">🗑</ion-button>
+      </div>
+      <small>Macros: {{ getMacros(desayuno) | json }}</small>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Repetir para almuerzo y cena -->
+  <!-- Almuerzo -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Almuerzo</ion-card-title>
+      <ion-button size="small" (click)="abrirBiblioteca('almuerzo')">+ Agregar</ion-button>
+    </ion-card-header>
+    <ion-card-content>
+      <div *ngFor="let a of almuerzo">
+        <p><strong>{{ a.descripcion }}</strong> - {{ a.calorias }} kcal</p>
+        <ion-button size="small" fill="clear" (click)="editarAlimento(a)">✏️</ion-button>
+        <ion-button size="small" fill="clear" color="danger" (click)="eliminarAlimento('almuerzo', a)">🗑</ion-button>
+      </div>
+      <small>Macros: {{ getMacros(almuerzo) | json }}</small>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Cena -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Cena</ion-card-title>
+      <ion-button size="small" (click)="abrirBiblioteca('cena')">+ Agregar</ion-button>
+    </ion-card-header>
+    <ion-card-content>
+      <div *ngFor="let a of cena">
+        <p><strong>{{ a.descripcion }}</strong> - {{ a.calorias }} kcal</p>
+        <ion-button size="small" fill="clear" (click)="editarAlimento(a)">✏️</ion-button>
+        <ion-button size="small" fill="clear" color="danger" (click)="eliminarAlimento('cena', a)">🗑</ion-button>
+      </div>
+      <small>Macros: {{ getMacros(cena) | json }}</small>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Modal edición -->
+  <div *ngIf="alimentoEditando" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Editar alimento</h3>
+      <ion-input placeholder="Descripción" [(ngModel)]="alimentoEditando.descripcion"></ion-input>
+      <ion-input placeholder="Calorías" type="number" [(ngModel)]="alimentoEditando.calorias"></ion-input>
+      <ion-input placeholder="Proteínas" type="number" [(ngModel)]="alimentoEditando.proteinas"></ion-input>
+      <ion-input placeholder="Grasas" type="number" [(ngModel)]="alimentoEditando.grasas"></ion-input>
+      <ion-input placeholder="Carbohidratos" type="number" [(ngModel)]="alimentoEditando.carbohidratos"></ion-input>
+
+      <ion-button (click)="guardarEdicion(comidaSeleccionada)">Guardar</ion-button>
+      <ion-button fill="clear" color="danger" (click)="alimentoEditando = null">Cancelar</ion-button>
+    </div>
   </div>
 
-  <div *ngFor="let alimento of alimentos" class="alimento-box">
-    <h4>{{ alimento.descripcion }} ({{ alimento.cantidad }} {{ alimento.medida }})</h4>
-    <p>Proteínas: {{ alimento.proteinas }}g</p>
-    <p>Grasas: {{ alimento.grasas }}g</p>
-    <p>Carbohidratos: {{ alimento.carbohidratos }}g</p>
-    <p>Calorías: {{ alimento.calorias }}kcal</p>
+  <!-- MODAL BIBLIOTECA -->
+  <div *ngIf="showBiblioteca" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Biblioteca de alimentos</h3>
+
+      <!-- ion-select -->
+      <ion-item>
+        <ion-label>Seleccionar alimento</ion-label>
+        <ion-select placeholder="Elegir de la base" [(ngModel)]="alimentoSeleccionado">
+          <ion-select-option *ngFor="let alimento of biblioteca" [value]="alimento">
+            {{ alimento.descripcion }} - {{ alimento.calorias }} kcal
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-button expand="block" (click)="agregarDesdeSelect()">Agregar seleccionado</ion-button>
+
+      <!-- Lista visual -->
+      <ion-list>
+        <ion-item *ngFor="let alimento of biblioteca" (click)="seleccionarAlimentoVisual(alimento)">
+          <ion-label>{{ alimento.descripcion }} - {{ alimento.calorias }} kcal</ion-label>
+        </ion-item>
+      </ion-list>
+
+      <h4>Agregar nuevo alimento</h4>
+      <ion-input placeholder="Descripción" [(ngModel)]="nuevoAlimento.descripcion"></ion-input>
+      <ion-input placeholder="Proteínas" type="number" [(ngModel)]="nuevoAlimento.proteinas" (ionInput)="calcularCalorias()"></ion-input>
+      <ion-input placeholder="Grasas" type="number" [(ngModel)]="nuevoAlimento.grasas" (ionInput)="calcularCalorias()"></ion-input>
+      <ion-input placeholder="Carbohidratos" type="number" [(ngModel)]="nuevoAlimento.carbohidratos" (ionInput)="calcularCalorias()"></ion-input>
+      <ion-input placeholder="Calorías" [value]="nuevoAlimento.calorias" readonly></ion-input>
+
+      <ion-button expand="block" color="success" (click)="agregarNuevoAlimento()">Agregar alimento nuevo</ion-button>
+      <ion-button expand="block" fill="clear" color="danger" (click)="showBiblioteca = false">Cerrar</ion-button>
+    </div>
   </div>
 
-  <ion-button expand="full" (click)="abrirModal()">Agregar alimento</ion-button>
-
-  <!-- MODAL -->
-
-<div *ngIf="showModal" class="modal-overlay">
-  <div class="modal-content">
-    <label>Nombre:</label>
-    <input [(ngModel)]="nuevoAlimento.descripcion" type="text" />
-
-    <label>Cantidad:</label>
-    <input [(ngModel)]="nuevoAlimento.cantidad" type="number" />
-
-    <label>Medida:</label>
-    <select [(ngModel)]="nuevoAlimento.medida">
-      <option value="gramos">gramos</option>
-      <option value="ml">ml</option>
-      <option value="unidad">unidad</option>
-    </select>
-
-    <label>Proteínas (g):</label>
-    <input type="number" [(ngModel)]="nuevoAlimento.proteinas" (input)="calcularCalorias()" />
-
-    <label>Grasas (g):</label>
-    <input type="number" [(ngModel)]="nuevoAlimento.grasas" (input)="calcularCalorias()" />
-
-    <label>Carbohidratos (g):</label>
-    <input type="number" [(ngModel)]="nuevoAlimento.carbohidratos" (input)="calcularCalorias()" />
-
-    <label>Calorías (calculadas):</label>
-    <input type="number" [(ngModel)]="nuevoAlimento.calorias" readonly />
-
-    <ion-button expand="block" (click)="agregarAlimento()">Agregar</ion-button>
-    <ion-button expand="block" color="danger" (click)="cancelar()">Cancelar</ion-button>
-  </div>
-</div>
+</ion-content>
+ 

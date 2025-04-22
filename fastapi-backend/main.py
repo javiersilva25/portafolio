@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
+from fastapi.security import OAuth2PasswordBearer
 
 from database import SessionLocal, engine
 import models, schemas
@@ -22,6 +23,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 # Dependencia para obtener sesión de DB
 def get_db():
@@ -53,6 +56,25 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="No se pudo validar el token",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        correo = payload.get("sub")
+        if correo is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+
+    user = db.query(models.User).filter(models.User.correo == correo).first()
+    if user is None:
+        raise credentials_exception
+    return user
+
 @app.post("/register")
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     user_exists = db.query(models.User).filter(models.User.correo == user.correo).first()
@@ -81,7 +103,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
     token_data = {
         "sub": user.correo,
-        "role": user.role
+        "role": user.role,
+        "id": user.id
     }
 
     access_token = create_access_token(token_data)
@@ -92,8 +115,12 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 # ========================
 
 @app.get("/foods", response_model=list[schemas.Food])
-def get_all_foods(db: Session = Depends(get_db)):
-    return db.query(models.Food).all()
+def get_all_foods(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    return db.query(models.Food).filter(models.Food.id_usuario == current_user.id).all()
+
 
 @app.get("/foods/{food_id}", response_model=schemas.Food)
 def get_food(food_id: int, db: Session = Depends(get_db)):
@@ -103,14 +130,18 @@ def get_food(food_id: int, db: Session = Depends(get_db)):
     return food
 
 @app.post("/foods", response_model=schemas.Food)
-def add_food(food: schemas.FoodCreate, db: Session = Depends(get_db)):
+def add_food(
+    food: schemas.FoodCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
     new_food = models.Food(
         descripcion = food.descripcion,
         calorias = food.calorias,
         proteinas = food.proteinas,
         grasas = food.grasas,
         carbohidratos = food.carbohidratos,
-        id_usuario = 2
+        id_usuario = current_user.id
     )
     db.add(new_food)
     db.commit()
@@ -195,3 +226,5 @@ def get_user_data(correo: str, db: Session = Depends(get_db)):
         "nombre": user.nombre,
         "correo": user.correo
     }
+
+

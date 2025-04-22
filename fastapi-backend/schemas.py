@@ -10,6 +10,7 @@ class FoodBase(BaseModel):
     proteinas: float
     carbohidratos: float
     grasas: float
+    fecha: Optional[date] = None
 
 class FoodCreate(FoodBase):
     id_usuario: int

@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
 from database import Base
+from datetime import date
 
 class Food(Base):
     __tablename__ = "foods"
@@ -10,6 +11,7 @@ class Food(Base):
     carbohidratos = Column(Float)
     proteinas = Column(Float)
     grasas = Column(Float)
+    fecha = Column(Date, default=date.today)
     id_usuario = Column(Integer, ForeignKey("users.id"))
 
 

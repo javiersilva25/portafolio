@@ -52,4 +52,13 @@ export class AuthService {
   getCorreoUsuario(): string | null {
     return localStorage.getItem('userEmail');
   }
+
+  obtenerIdUsuario(): number | null {
+    const token = this.obtenerToken();
+    if (!token) return null;
+  
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.id || null;
+  }
+  
 }
