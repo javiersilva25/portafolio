@@ -7,6 +7,7 @@ import { formatDate } from '@angular/common';
   selector: 'app-training',
   templateUrl: './training.component.html',
   styleUrls: ['./training.component.scss'],
+  standalone: false
 })
 export class TrainingComponent implements OnInit {
   fecha: string = formatDate(new Date(), 'yyyy-MM-dd', 'en');
