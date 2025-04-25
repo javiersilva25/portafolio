@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
+from sqlalchemy.orm import relationship
 from database import Base
 from datetime import date
 
@@ -42,7 +43,7 @@ class User(Base):
     correo = Column(String(60), unique=True, index=True)
     telefono = Column(String(12))
     fec_nac = Column(Date)
-    role = Column(String(10), default="user")  # ✅ AÑADIDO
+    role = Column(String(10), default="user")
 
 
 class Objective(Base):
@@ -70,3 +71,32 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     descripcion = Column(String(60))
+
+
+# ============================
+# 💪 MÓDULO ENTRENAMIENTOS
+# ============================
+
+class TrainingSession(Base):
+    __tablename__ = "training_sessions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    fecha = Column(Date, default=date.today)
+    id_usuario = Column(Integer, ForeignKey("users.id"))
+
+
+class ExercisePerformed(Base):
+    __tablename__ = "exercises_performed"
+
+    id = Column(Integer, primary_key=True, index=True)
+    descripcion = Column(String(100))
+    id_training = Column(Integer, ForeignKey("training_sessions.id"))
+
+
+class Series(Base):
+    __tablename__ = "series"
+
+    id = Column(Integer, primary_key=True, index=True)
+    repeticiones = Column(Integer)
+    peso = Column(Float)
+    id_exercise = Column(Integer, ForeignKey("exercises_performed.id"))

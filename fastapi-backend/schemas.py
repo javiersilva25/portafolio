@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import date
-from typing import Optional
+from typing import Optional, List
 
 # ----------- FOOD -----------
 
@@ -127,6 +127,63 @@ class MeasurementCreate(MeasurementBase):
 class Measurement(MeasurementBase):
     id: int
     id_usuario: int
+
+    class Config:
+        orm_mode = True
+
+
+# ================
+# 💪 ENTRENAMIENTOS
+# ================
+
+# ----------- SERIES -----------
+
+class SeriesBase(BaseModel):
+    repeticiones: int
+    peso: float
+
+class SeriesCreate(SeriesBase):
+    id_exercise: int
+
+class Series(SeriesBase):
+    id: int
+    id_exercise: int
+
+    class Config:
+        orm_mode = True
+
+
+# ----------- EXERCISES PERFORMED -----------
+
+class ExercisePerformedBase(BaseModel):
+    descripcion: str
+
+class ExercisePerformedCreate(ExercisePerformedBase):
+    id_training: int
+    series: List[SeriesBase] = []
+
+class ExercisePerformed(ExercisePerformedBase):
+    id: int
+    id_training: int
+    series: List[Series] = []
+
+    class Config:
+        orm_mode = True
+
+
+# ----------- TRAINING SESSION -----------
+
+class TrainingSessionBase(BaseModel):
+    fecha: date
+
+class TrainingSessionCreate(TrainingSessionBase):
+    id_usuario: int
+    ejercicios: List[ExercisePerformedCreate]
+
+class TrainingSession(TrainingSessionBase):
+    id: int
+    id_usuario: int
+    ejercicios: List[ExercisePerformed] = []
 
     class Config:
         orm_mode = True

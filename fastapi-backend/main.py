@@ -227,4 +227,44 @@ def get_user_data(correo: str, db: Session = Depends(get_db)):
         "correo": user.correo
     }
 
+# ========================
+# ENTRENAMIENTO DIARIO
+# ========================
+
+@app.post("/trainings", response_model=schemas.TrainingSession)
+def crear_entrenamiento(
+    data: schemas.TrainingSessionCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    # Crear sesión de entrenamiento
+    session = models.TrainingSession(
+        fecha=data.fecha,
+        id_usuario=current_user.id
+    )
+    db.add(session)
+    db.commit()
+    db.refresh(session)
+
+    # Agregar ejercicios y sus series
+    for ejercicio in data.ejercicios:
+        nuevo_ej = models.ExercisePerformed(
+            descripcion=ejercicio.descripcion,
+            id_training=session.id
+        )
+        db.add(nuevo_ej)
+        db.commit()
+        db.refresh(nuevo_ej)
+
+        for serie in ejercicio.series:
+            nueva_serie = models.Series(
+                repeticiones=serie.repeticiones,
+                peso=serie.peso,
+                id_exercise=nuevo_ej.id
+            )
+            db.add(nueva_serie)
+
+    db.commit()
+    return session
+
 
