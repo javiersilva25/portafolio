@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Rutinas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-card *ngFor="let rutina of rutinas">
+    <ion-card-header>
+      <ion-card-title>{{ rutina.nombre_rutina }}</ion-card-title>
+      <ion-card-subtitle>{{ rutina.descripcion }}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-buttons class="ion-justify-content-end">
+        <ion-button color="primary" size="small" (click)="verDetalle(rutina.id)">
+          <ion-icon name="eye-outline"></ion-icon>
+        </ion-button>
+        <ion-button color="danger" size="small" (click)="eliminarRutina(rutina.id)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

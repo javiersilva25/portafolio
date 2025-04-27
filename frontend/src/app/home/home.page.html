@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Home</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-segment [(ngModel)]="segment" value="entrenamientos">
+    <ion-segment-button value="entrenamientos">
+      <ion-label>Entrenamientos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="nutricion">
+      <ion-label>Nutrición</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ng-container [ngSwitch]="segment">
+    <app-entrenamientos *ngSwitchCase="'entrenamientos'"></app-entrenamientos>
+    <app-nutricion *ngSwitchCase="'nutricion'"></app-nutricion>
+  </ng-container>
+</ion-content>

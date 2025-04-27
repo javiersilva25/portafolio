@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Detalle Rutina</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ng-container *ngIf="rutina">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{ rutina.nombre_rutina }}</ion-card-title>
+        <ion-card-subtitle>{{ rutina.descripcion }}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+
+    <ion-card *ngFor="let ejercicio of rutina.ejercicios" class="ejercicio-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="barbell-outline" style="vertical-align: middle; margin-right: 8px;"></ion-icon>
+          {{ ejercicio.nombre_ejercicio }}
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Series:</strong> {{ ejercicio.series }}</p>
+        <p><strong>Repeticiones:</strong> {{ ejercicio.repeticiones }}</p>
+        <p><strong>Peso:</strong> {{ ejercicio.peso }} kg</p>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+
+  <ion-button expand="full" color="success" (click)="registrarEntrenamiento()">
+    Registrar Entrenamiento
+  </ion-button>
+
+</ion-content>

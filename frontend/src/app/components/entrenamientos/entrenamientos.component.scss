@@ -1,0 +1,41 @@
+* {
+    font-size: 13px;
+  }
+  
+  .ejercicio-card {
+    margin-bottom: 16px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .crear-ejercicio-card {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+  }
+  
+  ion-card-title {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .ejercicio-detalle {
+    color: #666;
+    font-size: 13px;
+    margin: 2px 0;
+  }
+  
+  ion-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  
+  ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --border-radius: 12px;
+  }
+  
