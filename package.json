@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "@angular/core": "^19.2.8",
-    "@angular/forms": "^19.2.8",
-    "@ionic/cli": "^7.2.1",
-    "python": "^0.0.4"
-  }
-}
