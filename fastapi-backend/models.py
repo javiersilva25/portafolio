@@ -12,8 +12,22 @@ class Food(Base):
     carbohidratos = Column(Float)
     proteinas = Column(Float)
     grasas = Column(Float)
-    fecha = Column(Date, default=date.today)
     id_usuario = Column(Integer, ForeignKey("users.id"))
+
+class DailyFood(Base):
+    __tablename__ = "daily_food"
+
+    fecha = Column(Date, default=date.today)  
+    cantidad = Column(Float, default=1) 
+    id_usuario = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    id_food = Column(Integer, ForeignKey("foods.id_food"), primary_key=True)
+    id_horario = Column(Integer, ForeignKey("horario.id_horario"), primary_key=True)
+
+class Horario(Base):
+    __tablename__ = "horario"
+
+    id_horario = Column(Integer, primary_key=True, index=True)
+    descripcion = Column(String(50)) 
 
 
 class Exercise(Base):

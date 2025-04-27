@@ -6,6 +6,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordBearer
+from datetime import date
 
 from database import SessionLocal, engine
 import models, schemas
@@ -124,10 +125,51 @@ def get_all_foods(
 
 @app.get("/foods/{food_id}", response_model=schemas.Food)
 def get_food(food_id: int, db: Session = Depends(get_db)):
-    food = db.query(models.Food).filter(models.Food.id == food_id).first()
+    food = db.query(models.Food).filter(models.Food.id_food == food_id).first()
     if not food:
         raise HTTPException(status_code=404, detail="Alimento no encontrado")
     return food
+
+@app.get("/users/{user_id}/foods", response_model=list[schemas.Food])
+def get_user_food(user_id: int, db: Session = Depends(get_db)):
+    foods = db.query(models.Food).filter(models.Food.id_usuario == user_id).all()
+    if not foods:
+        raise HTTPException(status_code=404, detail="No hay alimentos para este usuario")
+    return foods
+
+@app.get("/daily_food/{user_id}/{fecha}", response_model=list[schemas.DailyFoodBase])
+def get_daily_food(user_id: int, fecha: date, db: Session = Depends(get_db)):
+    daily_foods = db.query(models.DailyFood).filter(
+        models.DailyFood.id_usuario == user_id, 
+        models.DailyFood.fecha == fecha
+    ).all()
+    
+    if not daily_foods:
+        raise HTTPException(status_code=404, detail="No se encontraron alimentos para este usuario en esta fecha") 
+    return daily_foods
+
+@app.post("/daily_food", response_model=schemas.DailyFoodBase)
+def create_daily_food(
+    daily_food: schemas.DailyFoodBase,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    if not current_user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    new_daily_food = models.DailyFood(
+        fecha=daily_food.fecha,
+        cantidad=daily_food.cantidad,
+        id_usuario=current_user.id,
+        id_food=daily_food.id_food,
+        id_horario=daily_food.id_horario,
+    )
+
+    db.add(new_daily_food) 
+    db.commit()
+    db.refresh(new_daily_food)  
+
+    return new_daily_food  # Retornar el objeto creado
 
 @app.post("/foods", response_model=schemas.Food)
 def add_food(

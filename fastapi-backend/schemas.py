@@ -10,7 +10,6 @@ class FoodBase(BaseModel):
     proteinas: float
     carbohidratos: float
     grasas: float
-    fecha: Optional[date] = None
 
 class FoodCreate(FoodBase):
     id_usuario: int
@@ -21,6 +20,15 @@ class Food(FoodBase):
     class Config:
         orm_mode = True
 
+class DailyFoodBase(BaseModel):
+    fecha: date  # Fecha de la comida
+    cantidad: float = 1  # Cantidad de porciones consumidas
+    id_usuario: int  # ID del usuario
+    id_food: int  # ID del alimento
+    id_horario: int  # ID del horario (Desayuno, Almuerzo, Cena)
+
+    class Config:
+        orm_mode = True
 
 # ----------- EXERCISE -----------
 

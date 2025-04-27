@@ -13,7 +13,7 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>Desayuno</ion-card-title>
-      <ion-button size="small" (click)="abrirBiblioteca('desayuno')">+ Agregar</ion-button>
+      <ion-button size="small" (click)="abrirBiblioteca(1)">+ Agregar</ion-button>
     </ion-card-header>
     <ion-card-content>
       <div *ngFor="let a of desayuno">
@@ -28,7 +28,7 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>Almuerzo</ion-card-title>
-      <ion-button size="small" (click)="abrirBiblioteca('almuerzo')">+ Agregar</ion-button>
+      <ion-button size="small" (click)="abrirBiblioteca(2)">+ Agregar</ion-button>
     </ion-card-header>
     <ion-card-content>
       <div *ngFor="let a of almuerzo">
@@ -43,7 +43,7 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>Cena</ion-card-title>
-      <ion-button size="small" (click)="abrirBiblioteca('cena')">+ Agregar</ion-button>
+      <ion-button size="small" (click)="abrirBiblioteca(3)">+ Agregar</ion-button>
     </ion-card-header>
     <ion-card-content>
       <div *ngFor="let a of cena">
@@ -81,20 +81,75 @@
           </ion-select-option>
         </ion-select>
       </ion-item>
-      <ion-button expand="block" (click)="agregarDesdeSelect()">Agregar seleccionado</ion-button>
+      <ion-button expand="block" (click)="agregarDailyFood()">Agregar seleccionado</ion-button>
+
+      <!--  LISTA DE LA API (??)
 
       <ion-list>
         <ion-item *ngFor="let alimento of biblioteca" (click)="seleccionarAlimentoVisual(alimento)">
           <ion-label>{{ alimento.descripcion }} - {{ alimento.calorias }} kcal</ion-label>
         </ion-item>
       </ion-list>
+-->
 
       <h4>Agregar nuevo alimento</h4>
-      <ion-input placeholder="Descripción" [(ngModel)]="nuevoAlimento.descripcion"></ion-input>
-      <ion-input placeholder="Proteínas" type="number" [(ngModel)]="nuevoAlimento.proteinas" (ionInput)="calcularCalorias()"></ion-input>
-      <ion-input placeholder="Grasas" type="number" [(ngModel)]="nuevoAlimento.grasas" (ionInput)="calcularCalorias()"></ion-input>
-      <ion-input placeholder="Carbohidratos" type="number" [(ngModel)]="nuevoAlimento.carbohidratos" (ionInput)="calcularCalorias()"></ion-input>
-      <ion-input placeholder="Calorías" [value]="nuevoAlimento.calorias" readonly></ion-input>
+      <ion-item>
+        <ion-input
+          label="Descripción"
+          labelPlacement="stacked"
+          [clearOnEdit]="true"
+          placeholder="Nombre"
+          [(ngModel)]="nuevoAlimento.descripcion"
+        >
+        </ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-input
+          label="Proteínas"
+          labelPlacement="stacked"
+          [clearOnEdit]="true"
+          type="number"
+          placeholder="0"
+          [(ngModel)]="nuevoAlimento.proteinas"
+          (ionInput)="calcularCalorias()"
+        >
+        </ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-input
+          label="Grasas"
+          labelPlacement="stacked"
+          [clearOnEdit]="true"
+          type="number"
+          placeholder="0"
+          [(ngModel)]="nuevoAlimento.grasas"
+          (ionInput)="calcularCalorias()"
+        >
+        </ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-input
+          label="Carbohidratos"
+          labelPlacement="stacked"
+          [clearOnEdit]="true"
+          type="number"
+          placeholder="0"
+          [(ngModel)]="nuevoAlimento.carbohidratos"
+          (ionInput)="calcularCalorias()"
+        >
+        </ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label
+          labelPlacement="stacked"
+        >
+          Calorías: {{ nuevoAlimento.calorias }}
+        </ion-label>
+      </ion-item>
 
       <ion-button expand="block" color="success" (click)="agregarNuevoAlimento()">Agregar alimento nuevo</ion-button>
       <ion-button expand="block" fill="clear" color="danger" (click)="showBiblioteca = false">Cerrar</ion-button>

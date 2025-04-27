@@ -12,7 +12,14 @@ export interface Food {
   carbohidratos: number;
   calorias: number;
   id_usuario: number;
-  fecha?: string;
+}
+
+export interface DailyFood{
+  fecha: Date;
+  cantidad: number;
+  id_usuario: number;
+  id_food: number;
+  id_horario: number;
 }
 
 @Component({
@@ -21,6 +28,7 @@ export interface Food {
   styleUrls: ['./macros.component.scss'],
   standalone: false
 })
+
 export class MacrosComponent implements OnInit {
   biblioteca: Food[] = [];
   desayuno: Food[] = [];
@@ -29,11 +37,11 @@ export class MacrosComponent implements OnInit {
 
   objetivoCalorias = 2000;
   showBiblioteca = false;
-  comidaSeleccionada: 'desayuno' | 'almuerzo' | 'cena' = 'desayuno';
+  comidaSeleccionada: 1 | 2 | 3 = 1;
   fechaSeleccionada: string = new Date().toISOString().split('T')[0];
 
   alimentoEditando: Food | null = null;
-  alimentoSeleccionado: Food | null = null;
+  alimentoSeleccionado: any | null = null;
 
   nuevoAlimento: Food = {
     descripcion: '',
@@ -43,8 +51,7 @@ export class MacrosComponent implements OnInit {
     grasas: 0,
     carbohidratos: 0,
     calorias: 0,
-    id_usuario: 0,
-    fecha: ''
+    id_usuario: 0
   };
 
   constructor(
@@ -57,8 +64,16 @@ export class MacrosComponent implements OnInit {
   }
 
   cargarBiblioteca() {
-    this.apiService.getAllFoods().subscribe((data: any) => {
+    const id_usuario = this.authService.obtenerIdUsuario() ?? 0;
+
+    this.apiService.getUserFood(String(id_usuario)).subscribe((data:any) => {
       this.biblioteca = data;
+    })
+
+    this.apiService.getUserDailyFood(id_usuario, this.fechaSeleccionada).subscribe((data: any) => {
+      this.desayuno = data.filter((alimento: DailyFood) => alimento.id_horario === 1); // Desayuno
+      this.almuerzo = data.filter((alimento: DailyFood) => alimento.id_horario === 2); // Almuerzo
+      this.cena = data.filter((alimento: DailyFood) => alimento.id_horario === 3); // Cena
     });
   }
 
@@ -74,7 +89,7 @@ export class MacrosComponent implements OnInit {
     };
   }
 
-  abrirBiblioteca(tipo: 'desayuno' | 'almuerzo' | 'cena') {
+  abrirBiblioteca(tipo: 1 | 2 | 3) {
     this.comidaSeleccionada = tipo;
     this.showBiblioteca = true;
   }
@@ -83,7 +98,7 @@ export class MacrosComponent implements OnInit {
     const copia = {
       ...alimento,
       id: undefined,
-      fecha: this.fechaSeleccionada,
+      //fecha: this.fechaSeleccionada,
       id_usuario: this.authService.obtenerIdUsuario() ?? 0,
     };
 
@@ -93,34 +108,52 @@ export class MacrosComponent implements OnInit {
     });
   }
 
-  agregarDesdeSelect() {
-    if (!this.alimentoSeleccionado) return;
+  agregarDailyFood() {
+    if(!this.alimentoSeleccionado) return;
 
-    const copia = {
-      ...this.alimentoSeleccionado,
-      id: undefined,
+    const dailyFood = {
       fecha: this.fechaSeleccionada,
+      cantidad: 1, 
       id_usuario: this.authService.obtenerIdUsuario() ?? 0,
+      id_food: this.alimentoSeleccionado.id_food,  
+      id_horario: this.comidaSeleccionada,  
     };
 
-    this.apiService.addFood(copia).subscribe(() => {
-      this.agregarAComida(this.comidaSeleccionada, copia);
-      this.alimentoSeleccionado = null;
+    console.log(dailyFood); 
+  
+    this.apiService.addDailyFood(dailyFood).subscribe((data) => {
+      console.log('DailyFood agregado:', data);
     });
   }
 
-  agregarAComida(tipo: string, alimento: Food) {
-    if (tipo === 'desayuno') this.desayuno.push(alimento);
-    if (tipo === 'almuerzo') this.almuerzo.push(alimento);
-    if (tipo === 'cena') this.cena.push(alimento);
+  agregarAComida(tipo: number, alimento: Food) {
+    if (tipo === 1) this.desayuno.push(alimento);
+    if (tipo === 2) this.almuerzo.push(alimento);
+    if (tipo === 3) this.cena.push(alimento);
   }
 
   editarAlimento(alimento: Food) {
     this.alimentoEditando = { ...alimento };
   }
 
-  guardarEdicion(tipo: 'desayuno' | 'almuerzo' | 'cena') {
-    const lista = this[tipo];
+  guardarEdicion(tipo: 1 | 2 | 3) {
+    let tipoComida: 'desayuno' | 'almuerzo' | 'cena';
+  
+    switch (tipo) {
+      case 1:
+        tipoComida = 'desayuno';
+        break;
+      case 2:
+        tipoComida = 'almuerzo';
+        break;
+      case 3:
+        tipoComida = 'cena';
+        break;
+      default:
+        throw new Error('Tipo de comida no válido');
+    }
+  
+    const lista = this[tipoComida];
     const index = lista.findIndex(a => a.descripcion === this.alimentoEditando!.descripcion);
     if (index !== -1) lista[index] = { ...this.alimentoEditando! };
     this.alimentoEditando = null;
@@ -140,7 +173,7 @@ export class MacrosComponent implements OnInit {
   agregarNuevoAlimento() {
     const id_usuario = this.authService.obtenerIdUsuario() ?? 0;
     this.nuevoAlimento.id_usuario = id_usuario;
-    this.nuevoAlimento.fecha = this.fechaSeleccionada;
+    // this.nuevoAlimento.fecha = this.fechaSeleccionada;
 
     this.apiService.addFood(this.nuevoAlimento).subscribe(() => {
       this.cargarBiblioteca();
@@ -152,8 +185,7 @@ export class MacrosComponent implements OnInit {
         grasas: 0,
         carbohidratos: 0,
         calorias: 0,
-        id_usuario: id_usuario,
-        fecha: this.fechaSeleccionada
+        id_usuario: id_usuario
       };
     });
   }

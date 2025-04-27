@@ -29,8 +29,20 @@ export class ApiService {
     return this.http.get(`${this.apiURL}/foods`);
   }
 
+  getUserFood(id: string) {
+    return this.http.get(`${this.apiURL}/users/${id}/foods`);
+  }
+
   addFood(food: any) {
     return this.http.post(`${this.apiURL}/foods`, food);
+  }
+
+  getUserDailyFood(id_usuario: number, fecha: string) {
+    return this.http.get(`${this.apiURL}/daily_food/${id_usuario}/${fecha}`);
+  }
+
+  addDailyFood(dailyFood: any) {
+    return this.http.post(`${this.apiURL}/daily_food`, dailyFood);
   }
 
   updateFood(id: string, food: any) {
