@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { EntrenamientoService } from '../../services/entrenamiento.service';
-import { ToastController } from '@ionic/angular';
+import { ToastController, NavController } from '@ionic/angular';
+import { HistorialService } from '../../services/historial.service';
 
 @Component({
   selector: 'app-entrenamientos',
@@ -23,8 +24,10 @@ export class EntrenamientosComponent {
   };
 
   constructor(private entrenamientoService: EntrenamientoService,
-              private toastController: ToastController
-  ) {}
+              private navCtrl: NavController,
+              private historialService: HistorialService,
+              private toastController: ToastController) {}
+              
 
   agregarEjercicio() {
     if (!this.ejercicioActual.nombre_ejercicio) {
@@ -46,32 +49,47 @@ export class EntrenamientosComponent {
 
   guardarRutina() {
     if (!this.rutina.nombre_rutina || this.rutina.ejercicios.length === 0) {
-      return; // No guardar si falta info
+      return;
     }
   
     this.entrenamientoService.crearEntrenamiento(this.rutina).subscribe({
-      next: async () => {
-        this.rutina = { nombre_rutina: '', descripcion: '', ejercicios: [] };
+      next: (response) => {
+        console.log('Rutina guardada exitosamente', response);
         
-        const toast = await this.toastController.create({
-          message: 'Rutina guardada exitosamente ✅',
-          duration: 2000,
-          color: 'success'
+        // Ahora registrar el entrenamiento hecho (historial)
+        this.historialService.registrarEntrenamiento(response.rutina_id).subscribe({
+          next: async () => {
+            const toast = await this.toastController.create({
+              message: 'Entrenamiento registrado en historial ✅',
+              duration: 2000,
+              color: 'success'
+            });
+            toast.present();
+            
+            this.navCtrl.navigateForward('/historial');
+          },
+          error: async (err) => {
+            const toast = await this.toastController.create({
+              message: 'Error al registrar entrenamiento ❌',
+              duration: 2000,
+              color: 'danger'
+            });
+            toast.present();
+            console.error('Error al registrar entrenamiento', err);
+          }
         });
-        toast.present();
+  
       },
-      error: async (err) => {
-        const toast = await this.toastController.create({
-          message: 'Error al guardar rutina ❌',
-          duration: 2000,
-          color: 'danger'
-        });
-        toast.present();
+      error: (err) => {
         console.error('Error al guardar rutina', err);
       }
     });
   }
   
+  
+  goToHistorial() {
+    this.navCtrl.navigateForward('/historial');
+  }
 
   
 }

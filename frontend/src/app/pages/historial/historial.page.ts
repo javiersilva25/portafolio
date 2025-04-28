@@ -18,6 +18,12 @@ export class HistorialPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.navCtrl.navigateRoot('/login');
+      return;
+    }
+  
     this.cargarHistorial();
   }
 

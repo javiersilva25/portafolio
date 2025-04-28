@@ -8,7 +8,7 @@ class Historial(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     rutina_id = Column(Integer, ForeignKey("rutinas.id"))
-    usuario_id = Column(Integer, nullable=False)  # Agregamos esta línea
+    usuario_id = Column(Integer)
     fecha_realizacion = Column(DateTime, default=datetime.utcnow)
 
     rutina = relationship("Rutina")
