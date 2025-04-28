@@ -14,22 +14,28 @@
       </ion-card-header>
     
       <ion-card-content>
-        <p>Fecha: {{ item.fecha_realizacion | date: 'medium' }}</p>
+        <p><strong>Fecha:</strong> {{ item.fecha_realizacion | date: 'medium' }}</p>
     
         <div *ngIf="item.rutina?.ejercicios?.length > 0">
           <h3>Ejercicios:</h3>
+    
           <ion-list>
             <ion-item *ngFor="let ejercicio of item.rutina.ejercicios">
-              <ion-label>
+              <ion-label class="ion-text-wrap">
                 <h2>{{ ejercicio.nombre_ejercicio }}</h2>
-                <p>{{ ejercicio.series }} series x {{ ejercicio.repeticiones }} reps x {{ ejercicio.peso }} kg</p>
+                <p>{{ ejercicio.series }} series x {{ ejercicio.repeticiones }} reps @ {{ ejercicio.peso }} kg</p>
               </ion-label>
             </ion-item>
           </ion-list>
         </div>
+        <div *ngIf="!item.rutina?.ejercicios?.length">
+          <ion-text color="medium">
+            <p>No hay ejercicios registrados para esta rutina.</p>
+          </ion-text>
+        </div>
     
       </ion-card-content>
-    </ion-card>
+    </ion-card>    
   </ng-container>
 
   <ng-template #noHistorial>
