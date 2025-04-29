@@ -15,7 +15,7 @@ class AlimentoCreate(AlimentoBase):
 class Alimento(AlimentoBase):
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class RegistroAlimentoBase(BaseModel):
@@ -30,7 +30,7 @@ class RegistroAlimento(RegistroAlimentoBase):
     alimento: Alimento
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ComidaBase(BaseModel):
     tipo: str  # desayuno, almuerzo, cena
@@ -45,4 +45,4 @@ class Comida(ComidaBase):
     registros: List[RegistroAlimento]
 
     class Config:
-        orm_mode = True
+        from_attributes = True

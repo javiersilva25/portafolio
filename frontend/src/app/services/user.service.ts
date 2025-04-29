@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { HttpParams, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,16 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
 
-  login(credentials: any): Observable<any> {
-    const formData = new FormData();
-    formData.append('username', credentials.username);
-    formData.append('password', credentials.password);
-    return this.http.post(`${this.apiUrl}/login`, formData);
-  }
+  
+login(credentials: any): Observable<any> {
+  const body = new HttpParams()
+    .set('username', credentials.username)
+    .set('password', credentials.password);
+
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/x-www-form-urlencoded',
+  });
+
+  return this.http.post(`${this.apiUrl}/login`, body.toString(), { headers });
+}
 }
