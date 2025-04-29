@@ -46,7 +46,6 @@ export class RutinaDetallePage implements OnInit {
         });
         await toast.present();
   
-        // ⚡ Luego de mostrar el toast, navegar al historial
         this.navCtrl.navigateForward('/historial');
       },
       error: async (err) => {

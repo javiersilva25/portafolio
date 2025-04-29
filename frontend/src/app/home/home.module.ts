@@ -7,6 +7,7 @@ import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home-routing.module';
 import { EntrenamientosComponent } from '../components/entrenamientos/entrenamientos.component';
 import { NutricionComponent } from '../components/nutricion/nutricion.component';
+import { AlimentoModalComponent } from '../components/nutricion/alimento-modal/alimento-modal.component';
 
 
 @NgModule({
@@ -16,7 +17,7 @@ import { NutricionComponent } from '../components/nutricion/nutricion.component'
     IonicModule,
     HomePageRoutingModule
   ],
-  declarations: [HomePage, EntrenamientosComponent, NutricionComponent], 
+  declarations: [HomePage, EntrenamientosComponent, NutricionComponent, AlimentoModalComponent], 
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomePageModule {}

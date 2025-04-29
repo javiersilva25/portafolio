@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from typing import List
+from datetime import date
 
 class AlimentoBase(BaseModel):
     nombre: str
@@ -12,6 +14,35 @@ class AlimentoCreate(AlimentoBase):
 
 class Alimento(AlimentoBase):
     id: int
+    class Config:
+        orm_mode = True
+
+
+class RegistroAlimentoBase(BaseModel):
+    gramos: float
+    alimento_id: int
+
+class RegistroAlimentoCreate(RegistroAlimentoBase):
+    pass
+
+class RegistroAlimento(RegistroAlimentoBase):
+    id: int
+    alimento: Alimento
+
+    class Config:
+        orm_mode = True
+
+class ComidaBase(BaseModel):
+    tipo: str  # desayuno, almuerzo, cena
+    fecha: date
+    usuario_id: int
+
+class ComidaCreate(ComidaBase):
+    registros: List[RegistroAlimentoCreate]
+
+class Comida(ComidaBase):
+    id: int
+    registros: List[RegistroAlimento]
 
     class Config:
         orm_mode = True

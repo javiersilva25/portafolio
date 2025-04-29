@@ -31,7 +31,7 @@ export class EntrenamientosComponent {
 
   agregarEjercicio() {
     if (!this.ejercicioActual.nombre_ejercicio) {
-      return; // No agregar si el ejercicio está vacío
+      return;
     }
     this.rutina.ejercicios.push({ ...this.ejercicioActual });
     this.ejercicioActual = { nombre_ejercicio: '', series: 0, repeticiones: 0, peso: 0 };
@@ -39,8 +39,8 @@ export class EntrenamientosComponent {
 
   editarEjercicio(index: number) {
     const ejercicio = this.rutina.ejercicios[index];
-    this.ejercicioActual = { ...ejercicio }; // Carga en el formulario
-    this.rutina.ejercicios.splice(index, 1); // Elimina temporalmente
+    this.ejercicioActual = { ...ejercicio };
+    this.rutina.ejercicios.splice(index, 1);
   }
 
   eliminarEjercicio(index: number) {
@@ -56,7 +56,6 @@ export class EntrenamientosComponent {
       next: (response) => {
         console.log('Rutina guardada exitosamente', response);
         
-        // Ahora registrar el entrenamiento hecho (historial)
         this.historialService.registrarEntrenamiento(response.rutina_id).subscribe({
           next: async () => {
             const toast = await this.toastController.create({

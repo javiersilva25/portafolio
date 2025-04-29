@@ -1,9 +1,86 @@
-<ion-header collapse="condense">
+<ion-header>
   <ion-toolbar>
-    <ion-title size="large">Nutrición</ion-title>
+    <ion-title>Registro Nutricional Diario</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <p>Aquí irá la gestión de nutrición 🍎</p>
+
+  <ion-item>
+    <ion-label position="stacked">Seleccionar fecha</ion-label>
+    <ion-datetime
+      [(ngModel)]="fechaHoy"
+      (ionChange)="cargarComidasPorFecha()"
+      presentation="date"
+      [preferWheel]="true"
+      class="fecha-wheel">
+    </ion-datetime>
+  </ion-item>
+  
+
+  <!-- 🔢 Totales del día -->
+  <ion-card color="light">
+    <ion-card-header>
+      <ion-card-title>Total del día</ion-card-title>
+      <ion-card-subtitle>
+        Calorías: {{ totalCalorias | number:'1.0-0' }} kcal |
+        C: {{ totalCarbohidratos | number:'1.0-1' }}g |
+        P: {{ totalProteinas | number:'1.0-1' }}g |
+        G: {{ totalGrasas | number:'1.0-1' }}g
+      </ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
+  <!-- 🍳 Comidas -->
+  <div *ngFor="let tipo of tiposComida">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{ tipo | titlecase }}</ion-card-title>
+      </ion-card-header>
+
+      <ng-container *ngIf="comidas[tipo] && comidas[tipo].length > 0; else sinAlimentos">
+        <ion-list>
+          <ion-item-sliding *ngFor="let alimento of comidas[tipo]; let i = index">
+            <ion-item>
+              <ion-label>
+                <h3>{{ alimento.nombre }} - {{ alimento.gramos }}g</h3>
+                <p>
+                  {{ alimento.calorias | number:'1.0-0' }} kcal |
+                  C: {{ alimento.carbohidratos | number:'1.0-1' }}g |
+                  P: {{ alimento.proteinas | number:'1.0-1' }}g |
+                  G: {{ alimento.grasas | number:'1.0-1' }}g
+                </p>
+              </ion-label>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option color="danger" (click)="eliminarAlimento(tipo, i)">
+                Eliminar
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
+      </ng-container>
+
+      <!-- Si no hay alimentos -->
+      <ng-template #sinAlimentos>
+        <ion-item>
+          <ion-label>No hay alimentos añadidos.</ion-label>
+        </ion-item>
+      </ng-template>
+
+      <ion-button expand="block" color="primary" (click)="abrirModal(tipo)">
+        + Agregar alimento
+      </ion-button>
+    </ion-card>
+  </div>
+
+  <!-- 💾 Guardar botón -->
+  <ion-button
+    expand="full"
+    color="success"
+    (click)="guardarDia()"
+    [disabled]="!puedeGuardar()">
+    Guardar día
+  </ion-button>
+
 </ion-content>
