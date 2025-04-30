@@ -83,6 +83,12 @@ export class AlimentoModalComponent implements OnInit {
     }
   }
   
+  calcularCalorias() {
+    const p = this.nuevoAlimento.proteinas || 0;
+    const g = this.nuevoAlimento.grasas || 0;
+    const c = this.nuevoAlimento.carbohidratos || 0;
+    this.nuevoAlimento.calorias = (p * 4) + (c * 4) + (g * 9);
+  }
 
   cancelar() {
     this.modalController.dismiss(null);

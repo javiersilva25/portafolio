@@ -20,16 +20,16 @@
     <ion-input [(ngModel)]="nuevoAlimento.nombre"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">Proteínas (g)</ion-label>
-    <ion-input type="number" [(ngModel)]="nuevoAlimento.proteinas"></ion-input>
+    <ion-label position="floating">Proteínas (en 100g)</ion-label>
+    <ion-input type="number" [(ngModel)]="nuevoAlimento.proteinas" (ionInput)="calcularCalorias()"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">Carbohidratos (g)</ion-label>
-    <ion-input type="number" [(ngModel)]="nuevoAlimento.carbohidratos"></ion-input>
+    <ion-label position="floating">Carbohidratos (en 100g)</ion-label>
+    <ion-input type="number" [(ngModel)]="nuevoAlimento.carbohidratos" (ionInput)="calcularCalorias()"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">Grasas (g)</ion-label>
-    <ion-input type="number" [(ngModel)]="nuevoAlimento.grasas"></ion-input>
+    <ion-label position="floating">Grasas (en 100g)</ion-label>
+    <ion-input type="number" [(ngModel)]="nuevoAlimento.grasas" (ionInput)="calcularCalorias()"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label position="floating">Calorías</ion-label>
@@ -38,7 +38,7 @@
 </ng-container>
 
 <ion-item>
-  <ion-label position="floating">Cantidad en gramos</ion-label>
+  <ion-label position="floating">Cantidad consumida (g)</ion-label>
   <ion-input type="number" [(ngModel)]="gramos"></ion-input>
 </ion-item>
 
