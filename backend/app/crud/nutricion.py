@@ -37,3 +37,12 @@ def create_comida(db: Session, usuario_id: int, comida: schemas.ComidaCreate):
 
 def get_comidas_by_usuario_and_fecha(db: Session, usuario_id: int, fecha: date):
     return db.query(models.Comida).filter_by(usuario_id=usuario_id, fecha=fecha).all()
+
+def delete_comida_por_tipo_y_fecha(db: Session, usuario_id: int, fecha: date, tipo: str):
+    comida = db.query(models.Comida).filter_by(usuario_id=usuario_id, fecha=fecha, tipo=tipo).first()
+    if comida:
+        db.delete(comida)
+        db.commit()
+        return True
+    return False
+

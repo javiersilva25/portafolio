@@ -18,7 +18,6 @@
   </ion-item>
   
 
-  <!-- 🔢 Totales del día -->
   <ion-card color="light">
     <ion-card-header>
       <ion-card-title>Total del día</ion-card-title>
@@ -31,7 +30,6 @@
     </ion-card-header>
   </ion-card>
 
-  <!-- 🍳 Comidas -->
   <div *ngFor="let tipo of tiposComida">
     <ion-card>
       <ion-card-header>
@@ -64,7 +62,6 @@
         </ion-list>
       </ng-container>
 
-      <!-- Si no hay alimentos -->
       <ng-template #sinAlimentos>
         <ion-item>
           <ion-label>No hay alimentos añadidos.</ion-label>
@@ -76,13 +73,5 @@
       </ion-button>
     </ion-card>
   </div>
-
-  <!-- 💾 Guardar botón -->
-  <ion-button
-    expand="full"
-    (click)="guardarDia()"
-    [disabled]="!puedeGuardar()">
-    Guardar día
-  </ion-button>
 
 </ion-content>

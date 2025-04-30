@@ -57,6 +57,7 @@ export class NutricionComponent implements OnInit {
       if (data.data) {
         this.comidas[tipo].push(data.data);
         this.calcularTotales();
+        this.guardarDia();
       }
     });
 
@@ -81,13 +82,11 @@ export class NutricionComponent implements OnInit {
 
   guardarDia() {
     const fecha = this.fechaHoy;
-
-    this.nutricionService.getComidasPorFecha(fecha).subscribe((comidas) => {
-      this.tiposComida.forEach(tipo => {
-        if (this.comidas[tipo].length > 0) {
-          const yaExiste = comidas.some(comida => comida.tipo === tipo);
-
-          if (!yaExiste) {
+  
+    this.tiposComida.forEach(tipo => {
+      if (this.comidas[tipo].length > 0) {
+        this.nutricionService.deleteComidaPorFechaYTipo(fecha, tipo).subscribe({
+          next: () => {
             this.nutricionService.postComida({
               tipo,
               fecha,
@@ -95,16 +94,40 @@ export class NutricionComponent implements OnInit {
                 gramos: a.gramos,
                 alimento_id: a.id
               }))
-            }).subscribe(() => {
-              this.mostrarToast(`Comida ${tipo} guardada con éxito`);
+            }).subscribe({
+              next: () => {
+                this.mostrarToast(`Comida ${tipo} guardada automáticamente`);
+              },
+              error: (err) => {
+                this.mostrarToast(`Error al guardar comida ${tipo}`, 'danger');
+                console.error(err);
+              }
             });
-          } else {
-            this.mostrarToast(`Comida ${tipo} ya existe para esta fecha`, 'warning');
+          },
+          error: (err) => {
+            console.warn(`No se pudo eliminar comida ${tipo} (puede no existir):`, err);
+  
+            this.nutricionService.postComida({
+              tipo,
+              fecha,
+              registros: this.comidas[tipo].map((a) => ({
+                gramos: a.gramos,
+                alimento_id: a.id
+              }))
+            }).subscribe({
+              next: () => {
+                this.mostrarToast(`Comida ${tipo} guardada automáticamente`);
+              },
+              error: (err) => {
+                this.mostrarToast(`Error al guardar comida ${tipo}`, 'danger');
+                console.error(err);
+              }
+            });
           }
-        }
-      });
+        });
+      }
     });
-  }
+  }  
 
   cargarComidasPorFecha() {
     this.comidas = {
@@ -139,6 +162,7 @@ export class NutricionComponent implements OnInit {
   eliminarAlimento(tipo: TipoComida, index: number) {
     this.comidas[tipo].splice(index, 1);
     this.calcularTotales();
+    this.guardarDia();
   }
 
   puedeGuardar(): boolean {
@@ -170,6 +194,7 @@ export class NutricionComponent implements OnInit {
       if (data.data) {
         this.comidas[tipo][index] = data.data;
         this.calcularTotales();
+        this.guardarDia();
       }
     });
   

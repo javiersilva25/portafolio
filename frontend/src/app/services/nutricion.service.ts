@@ -35,4 +35,9 @@ export class NutricionService {
   postAlimento(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/alimentos`, data, this.getHeaders());
   }
+
+  deleteComidaPorFechaYTipo(fecha: string, tipo: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/comidas/${fecha}/${tipo}`, this.getHeaders());
+  }
+  
 }
