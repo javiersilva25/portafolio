@@ -13,11 +13,11 @@ def create_alimento(db: Session, alimento: schemas.AlimentoCreate):
     db.refresh(db_alimento)
     return db_alimento
 
-def create_comida(db: Session, comida: schemas.ComidaCreate):
+def create_comida(db: Session, usuario_id: int, comida: schemas.ComidaCreate):
     db_comida = models.Comida(
         tipo=comida.tipo,
         fecha=comida.fecha,
-        usuario_id=comida.usuario_id
+        usuario_id=usuario_id
     )
     db.add(db_comida)
     db.commit()

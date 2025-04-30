@@ -68,7 +68,7 @@
         </ion-item>
       </ng-template>
 
-      <ion-button expand="block" color="primary" (click)="abrirModal(tipo)">
+      <ion-button expand="block" (click)="abrirModal(tipo)">
         + Agregar alimento
       </ion-button>
     </ion-card>
@@ -77,7 +77,6 @@
   <!-- 💾 Guardar botón -->
   <ion-button
     expand="full"
-    color="success"
     (click)="guardarDia()"
     [disabled]="!puedeGuardar()">
     Guardar día

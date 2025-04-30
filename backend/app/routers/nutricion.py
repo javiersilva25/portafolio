@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
 from sqlalchemy.orm import Session
 from app.schemas import nutricion as schemas
 from app.crud import nutricion as crud
 from app.database import SessionLocal
 from fastapi import Query
 from datetime import date
+from app.security import obtener_usuario_actual
+from app.schemas.usuario import UsuarioToken
 
 router = APIRouter()
 
@@ -24,9 +26,9 @@ def create_alimento(alimento: schemas.AlimentoCreate, db: Session = Depends(get_
     return crud.create_alimento(db, alimento)
 
 @router.post("/comidas", response_model=schemas.Comida)
-def create_comida(comida: schemas.ComidaCreate, db: Session = Depends(get_db)):
-    return crud.create_comida(db, comida)
+def create_comida(comida: schemas.ComidaCreate,usuario: UsuarioToken = Depends(obtener_usuario_actual), db: Session = Depends(get_db)):
+    return crud.create_comida(db, usuario.id, comida)
 
 @router.get("/comidas/{fecha}", response_model=list[schemas.Comida])
-def get_comidas(usuario_id: int, fecha: date = Query(...), db: Session = Depends(get_db)):
-    return crud.get_comidas_by_usuario_and_fecha(db, usuario_id, fecha)
+def get_comidas( usuario: UsuarioToken = Depends(obtener_usuario_actual), fecha: date = Path(...), db: Session = Depends(get_db)):
+    return crud.get_comidas_by_usuario_and_fecha(db, usuario.id, fecha)

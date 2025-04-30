@@ -35,14 +35,12 @@ class RegistroAlimento(RegistroAlimentoBase):
 class ComidaBase(BaseModel):
     tipo: str  # desayuno, almuerzo, cena
     fecha: date
-    usuario_id: int
 
 class ComidaCreate(ComidaBase):
     registros: List[RegistroAlimentoCreate]
 
 class Comida(ComidaBase):
     id: int
-    fecha: date
     registros: List[RegistroAlimento]
 
     class Config:
