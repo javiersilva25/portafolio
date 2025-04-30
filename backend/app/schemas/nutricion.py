@@ -42,6 +42,7 @@ class ComidaCreate(ComidaBase):
 
 class Comida(ComidaBase):
     id: int
+    fecha: date
     registros: List[RegistroAlimento]
 
     class Config:

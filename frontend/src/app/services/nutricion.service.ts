@@ -2,17 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const API_URL = 'http://localhost:8000/routers';
-
 @Injectable({
   providedIn: 'root'
 })
 export class NutricionService {
 
+  private apiUrl = 'http://localhost:8000/routers';
+
   constructor(private http: HttpClient) {}
 
   private getHeaders() {
-    const token = localStorage.getItem('token')?.trim();
+    const token = localStorage.getItem('token');
     return {
       headers: new HttpHeaders({
         'Authorization': `Bearer ${token}`
@@ -21,18 +21,18 @@ export class NutricionService {
   }
 
   getAlimentos(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_URL}/alimentos`, this.getHeaders());
+    return this.http.get<any[]>(`${this.apiUrl}/alimentos`, this.getHeaders());
   }
 
   postComida(data: any): Observable<any> {
-    return this.http.post(`${API_URL}/comidas`, data, this.getHeaders());
+    return this.http.post(`${this.apiUrl}/comidas`, data, this.getHeaders());
   }
 
   getComidasPorFecha(fecha: string): Observable<any[]> {
-    return this.http.get<any[]>(`${API_URL}/comidas/fecha/${fecha}`, this.getHeaders());
+    return this.http.get<any[]>(`${this.apiUrl}/comidas/${fecha}`, this.getHeaders());
   }
 
   postAlimento(data: any): Observable<any> {
-    return this.http.post(`${API_URL}/alimentos`, data, this.getHeaders());
+    return this.http.post(`${this.apiUrl}/alimentos`, data, this.getHeaders());
   }
 }

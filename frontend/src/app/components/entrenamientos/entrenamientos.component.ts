@@ -87,7 +87,7 @@ export class EntrenamientosComponent {
   
   
   goToHistorial() {
-    this.navCtrl.navigateForward('/historial');
+    this.navCtrl.navigateRoot('/historial');
   }
 
   

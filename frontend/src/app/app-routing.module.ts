@@ -23,24 +23,23 @@ const routes: Routes = [
   },
   {
     path: 'rutinas',
-    loadChildren: () => import('./pages/rutinas/rutinas.module').then( m => m.RutinasPageModule)
+    loadChildren: () => import('./pages/rutinas/rutinas.module').then( m => m.RutinasPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'rutina-detalle',
-    loadChildren: () => import('./pages/rutina-detalle/rutina-detalle.module').then( m => m.RutinaDetallePageModule)
+    loadChildren: () => import('./pages/rutina-detalle/rutina-detalle.module').then( m => m.RutinaDetallePageModule),
+    canActivate: [AuthGuard]
   },
   { 
     path: 'rutina-detalle/:id', 
-    loadChildren: () => import('./pages/rutina-detalle/rutina-detalle.module').then( m => m.RutinaDetallePageModule) 
+    loadChildren: () => import('./pages/rutina-detalle/rutina-detalle.module').then( m => m.RutinaDetallePageModule),
+    canActivate: [AuthGuard] 
   },
   { path: 'historial', 
-    loadChildren: () => import('./pages/historial/historial.module').then( m => m.HistorialPageModule) 
-  },
-  {
-    path: 'historial',
-    loadChildren: () => import('./pages/historial/historial.module').then( m => m.HistorialPageModule)
+    loadChildren: () => import('./pages/historial/historial.module').then( m => m.HistorialPageModule),
+    canActivate: [AuthGuard] 
   }
-
 
 ];
 

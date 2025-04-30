@@ -27,6 +27,6 @@ def create_alimento(alimento: schemas.AlimentoCreate, db: Session = Depends(get_
 def create_comida(comida: schemas.ComidaCreate, db: Session = Depends(get_db)):
     return crud.create_comida(db, comida)
 
-@router.get("/comidas/{usuario_id}", response_model=list[schemas.Comida])
+@router.get("/comidas/{fecha}", response_model=list[schemas.Comida])
 def get_comidas(usuario_id: int, fecha: date = Query(...), db: Session = Depends(get_db)):
     return crud.get_comidas_by_usuario_and_fecha(db, usuario_id, fecha)

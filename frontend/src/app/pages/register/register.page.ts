@@ -21,7 +21,7 @@ export class RegisterPage {
     this.userService.register(this.user).subscribe({
       next: (response) => {
         console.log('Usuario registrado', response);
-        this.navCtrl.navigateForward('/login');
+        this.navCtrl.navigateRoot('/login');
       },
       error: (error) => {
         console.error('Error en registro', error);

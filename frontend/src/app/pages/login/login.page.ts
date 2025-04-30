@@ -21,7 +21,7 @@ export class LoginPage {
       next: (response) => {
         console.log('Login exitoso', response);
         localStorage.setItem('token', response.access_token.trim());
-        this.navCtrl.navigateForward('/home');
+        this.navCtrl.navigateRoot('/home');
       },
       error: (error) => {
         console.error('Error en login', error);
@@ -30,6 +30,6 @@ export class LoginPage {
   }
 
   goToRegister() {
-    this.navCtrl.navigateForward('/register');
+    this.navCtrl.navigateRoot('/register');
   }
 }
