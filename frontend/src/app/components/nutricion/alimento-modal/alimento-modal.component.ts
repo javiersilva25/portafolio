@@ -10,6 +10,7 @@ import { NutricionService } from 'src/app/services/nutricion.service';
 })
 export class AlimentoModalComponent implements OnInit {
 
+  @Input() alimentoAEditar: any = null;
   @Input() tipo: string = '';
 
   crearNuevo = false;
@@ -34,8 +35,27 @@ export class AlimentoModalComponent implements OnInit {
   ngOnInit() {
     this.nutricionService.getAlimentos().subscribe((data) => {
       this.alimentos = data;
+  
+      if (this.alimentoAEditar) {
+        this.crearNuevo = false;
+        const alimentoEnLista = data.find(a => a.id === this.alimentoAEditar.id);
+        if (alimentoEnLista) {
+          this.alimentoSeleccionado = alimentoEnLista;
+        } else {
+          this.crearNuevo = true;
+          this.nuevoAlimento = {
+            nombre: this.alimentoAEditar.nombre,
+            proteinas: this.alimentoAEditar.proteinas,
+            carbohidratos: this.alimentoAEditar.carbohidratos,
+            grasas: this.alimentoAEditar.grasas,
+            calorias: this.alimentoAEditar.calorias
+          };
+        }
+        this.gramos = this.alimentoAEditar.gramos;
+      }
     });
   }
+  
 
   calcularMacros(alimento: any, gramos: number) {
     const factor = gramos / 100;

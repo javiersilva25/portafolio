@@ -154,4 +154,26 @@ export class NutricionComponent implements OnInit {
     });
     toast.present();
   }
+
+  async editarAlimento(tipo: TipoComida, index: number) {
+    const alimentoActual = this.comidas[tipo][index];
+  
+    const modal = await this.modalController.create({
+      component: AlimentoModalComponent,
+      componentProps: {
+        tipo,
+        alimentoAEditar: alimentoActual
+      }
+    });
+  
+    modal.onDidDismiss().then((data) => {
+      if (data.data) {
+        this.comidas[tipo][index] = data.data;
+        this.calcularTotales();
+      }
+    });
+  
+    await modal.present();
+  }
+  
 }
