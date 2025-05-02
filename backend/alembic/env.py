@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from app.database import Base
-from app.models import rutina, ejercicio, historial, usuario, entrenamiento, nutricion
+from app.models import rutina, ejercicio, historial, usuario, entrenamiento, nutricion, objetivo, objetivo_usuario
 
 
 # this is the Alembic Config object, which provides

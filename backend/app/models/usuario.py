@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 from .perfil import Perfil
 from .medida import Medida
+from .objetivo_usuario import ObjetivoUsuario
 
 class Usuario(Base):
     __tablename__ = "usuarios"
@@ -15,3 +16,4 @@ class Usuario(Base):
     comidas = relationship("Comida", back_populates="usuario", cascade="all, delete")
     perfil = relationship("Perfil", back_populates="usuario", uselist=False)
     medidas = relationship("Medida", back_populates="usuario", cascade="all, delete")
+    objetivo_usuario = relationship("ObjetivoUsuario", back_populates="usuario", cascade="all, delete")

@@ -8,6 +8,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { EntrenamientosComponent } from '../components/entrenamientos/entrenamientos.component';
 import { NutricionComponent } from '../components/nutricion/nutricion.component';
 import { AlimentoModalComponent } from '../components/nutricion/alimento-modal/alimento-modal.component';
+import { PerfilComponent } from '../components/perfil/perfil.component';
 
 
 @NgModule({
@@ -17,7 +18,7 @@ import { AlimentoModalComponent } from '../components/nutricion/alimento-modal/a
     IonicModule,
     HomePageRoutingModule
   ],
-  declarations: [HomePage, EntrenamientosComponent, NutricionComponent, AlimentoModalComponent], 
+  declarations: [HomePage, EntrenamientosComponent, NutricionComponent, AlimentoModalComponent, PerfilComponent], 
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomePageModule {}

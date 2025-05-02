@@ -1,3 +1,113 @@
-<p>
-  perfil works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- PERFIL DE USUARIO -->
+  <form *ngIf="perfilForm" (ngSubmit)="guardarPerfil()">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Información Personal</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <ion-item>
+          <ion-label position="floating">Fecha de Nacimiento</ion-label>
+          <ion-datetime
+            presentation="date"
+            [(ngModel)]="fecha"
+            name="fec_nac"
+            required>
+          </ion-datetime>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Altura (cm)</ion-label>
+          <ion-input type="number" [(ngModel)]="perfilForm.altura" name="altura" required></ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="full" type="submit">
+      Guardar Perfil
+    </ion-button>
+  </form>
+
+  <!-- OBJETIVOS DEL USUARIO -->
+
+  <ion-card *ngIf="objetivosUsuario.length > 0">
+    <ion-card-header>
+      <ion-card-title>Mis Objetivos</ion-card-title>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let obj of objetivosUsuario">
+          <ion-label>
+            <h2>{{ obj.accion | titlecase }} {{ obj.descripcion }}</h2>
+            <p>Valor: {{ obj.valor }}</p>
+          </ion-label>
+          <ion-buttons slot="end">
+            <ion-button fill="clear" color="primary" (click)="editarObjetivo(obj)">
+              <ion-icon name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="eliminarObjetivo(obj.id)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  
+  <ion-card *ngIf="objetivosUsuario.length === 0">
+    <ion-card-content>
+      <ion-text color="medium">No se encontraron objetivos asignados.</ion-text>
+    </ion-card-content>
+  </ion-card>
+
+
+  <form *ngIf="objetivoForm" (ngSubmit)="guardarObjetivo()">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Objetivo Personal</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <ion-item>
+          <ion-label>Objetivo</ion-label>
+          <ion-select [(ngModel)]="objetivoForm.id_objetivo" name="id_objetivo" interface="popover" required>
+            <ion-select-option *ngFor="let obj of objetivos" [value]="obj.id">
+              {{ obj.descripcion }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>        
+
+        <ion-item>
+          <ion-label>Acción</ion-label>
+          <ion-select [(ngModel)]="objetivoForm.accion" name="accion" interface="popover" required>
+            <ion-select-option value="aumentar">Aumentar</ion-select-option>
+            <ion-select-option value="mantener">Mantener</ion-select-option>
+            <ion-select-option value="disminuir">Disminuir</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Valor</ion-label>
+          <ion-input type="number" [(ngModel)]="objetivoForm.valor" name="valor" required></ion-input>
+        </ion-item>
+
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="full" type="submit">
+      Guardar Objetivo
+    </ion-button>
+  </form>
+
+</ion-content>

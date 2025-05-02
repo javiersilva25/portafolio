@@ -17,10 +17,14 @@
     <ion-segment-button value="nutricion">
       <ion-label>Nutrición</ion-label>
     </ion-segment-button>
+    <ion-segment-button value="perfil">
+      <ion-label>Perfil</ion-label>
+    </ion-segment-button>
   </ion-segment>
 
   <ng-container [ngSwitch]="segment">
     <app-entrenamientos *ngSwitchCase="'entrenamientos'"></app-entrenamientos>
     <app-nutricion *ngSwitchCase="'nutricion'"></app-nutricion>
+    <app-perfil *ngSwitchCase="'perfil'"></app-perfil>
   </ng-container>
 </ion-content>
