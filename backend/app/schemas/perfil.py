@@ -47,3 +47,20 @@ class Perfil(ObjetivoUsuarioBase):
     id: int
     class Config:
         from_attributes = True
+
+class MedidaBase(BaseModel):
+    fecha: date
+    nombre_medida: str
+    unidad_medida: str
+    valor: float
+
+class MedidaCreate(MedidaBase):
+    pass
+
+class MedidaUpdate(MedidaBase):
+    pass
+
+class Medida(MedidaBase):
+    id: int
+    class Config:
+        from_attributes = True

@@ -28,6 +28,8 @@ export class PerfilService {
     return this.http.post(`${this.apiUrl}/perfil`, data, this.getHeaders());
   }
 
+
+
   getObjetivosUsuario(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/objetivos/usuario`, this.getHeaders());
   }
@@ -46,6 +48,28 @@ export class PerfilService {
 
   deleteObjetivo(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/objetivos/${id}`, this.getHeaders());
+  }
+
+
+  
+  getMedidas(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/medidas`, this.getHeaders());
+  }
+
+  postMedida(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/medidas`, data, this.getHeaders());
+  }
+
+  postMedidaId(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/medidas/${id}`, data, this.getHeaders());
+  }
+
+  updateMedida(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/medidas/${id}`, data, this.getHeaders());
+  }
+
+  deleteMedida(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/medidas/${id}`, this.getHeaders());
   }
 
 }

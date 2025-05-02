@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.models.objetivo_usuario import ObjetivoUsuario
 from app.models.perfil import Perfil
 from app.models.objetivo import Objetivo
+from app.models.medida import Medida
 from app.schemas import perfil as schemas
 from fastapi import HTTPException
 
@@ -50,8 +51,6 @@ def eliminar_objetivo_usuario(db: Session, usuario_id: int, objetivo_usuario_id:
 
 
 
-
-
 def crear_perfil(db: Session, usuario_id: int, perfil: schemas.PerfilCreate):
     perfil_existente = db.query(Perfil).filter(Perfil.usuario_id == usuario_id).first()
     if perfil_existente:
@@ -72,4 +71,36 @@ def crear_perfil(db: Session, usuario_id: int, perfil: schemas.PerfilCreate):
 def obtener_perfil(db: Session, usuario_id: int):
     return db.query(Perfil).filter_by(usuario_id=usuario_id).first()
 
+
+
+def crear_medida(db: Session, usuario_id: int, medida: schemas.MedidaCreate):
+    db_medida = Medida(
+        fecha=medida.fecha,
+        nombre_medida=medida.nombre_medida,
+        unidad_medida=medida.unidad_medida,
+        valor=medida.valor,
+        usuario_id=usuario_id
+    )
+    db.add(db_medida)
+    db.commit()
+    db.refresh(db_medida)
+    return db_medida
+
+def obtener_medidas(db: Session, usuario_id: int):
+    return db.query(Medida).filter_by(usuario_id=usuario_id).all()
+
+def actualizar_medida(db: Session, usuario_id: int, medida_id: int, medida_data: schemas.MedidaUpdate):
+    medida = db.query(Medida).filter(Medida.id == medida_id, usuario_id == usuario_id).first()
+    if medida:
+        medida.valor = medida_data.valor
+        db.commit()
+    return medida
+
+def eliminar_medida(db: Session, usuario_id: int, medida_id: int):
+    medida = db.query(Medida).filter( Medida.id == medida_id, usuario_id==usuario_id).first()
+    if medida:
+        db.delete(medida)
+        db.commit()
+        return True
+    return False
 

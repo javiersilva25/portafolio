@@ -76,3 +76,49 @@ def create_perfil(
     usuario: UsuarioToken = Depends(obtener_usuario_actual)
 ):
     return crud.crear_perfil(db, usuario.id, perfil)
+
+
+
+@router.get("/medidas", response_model=list[schemas.Medida])
+def get_medidas(
+    db: Session = Depends(get_db),
+    usuario: UsuarioToken = Depends(obtener_usuario_actual)
+):
+    return crud.obtener_medidas(db, usuario.id)
+
+@router.post("/medidas", response_model=schemas.MedidaBase)
+def create_medida(
+    medida: schemas.MedidaCreate,
+    db: Session = Depends(get_db),
+    usuario: UsuarioToken = Depends(obtener_usuario_actual)
+):
+    return crud.crear_medida(db, usuario.id, medida)
+
+@router.post("/medidas/{medida_id}", response_model=schemas.Medida)
+def create_medida_por_id(
+    medida_id: int,
+    medida: schemas.MedidaCreate,
+    db: Session = Depends(get_db),
+    usuario: UsuarioToken = Depends(obtener_usuario_actual)
+):
+    return crud.crear_medida_por_id(db, usuario.id, medida_id, medida)
+
+@router.put("/medidas/{medida_id}", response_model=schemas.MedidaUpdate)
+def update_medida(
+    medida_id: int,
+    medida_data: schemas.MedidaUpdate,
+    db: Session = Depends(get_db),
+    usuario: UsuarioToken = Depends(obtener_usuario_actual)
+):
+    return crud.actualizar_medida(db, usuario.id, medida_id, medida_data)
+
+@router.delete("/medidas/{medida_id}")
+def delete_medida(
+    medida_id: int,
+    db: Session = Depends(get_db),
+    usuario: UsuarioToken = Depends(obtener_usuario_actual)
+):
+    success = crud.eliminar_medida(db, usuario.id, medida_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Medida no encontrada")
+    return {"mensaje": "Medida eliminada"}

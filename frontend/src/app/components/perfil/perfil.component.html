@@ -110,4 +110,66 @@
     </ion-button>
   </form>
 
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Medidas</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let medida of medidas">
+          <ion-label>
+            <h2>{{ medida.nombre_medida | titlecase }}: {{ medida.valor }} {{ medida.unidad_medida }} {{ medida.fecha | date: 'dd/MM/yyyy' }}</h2>
+          </ion-label>
+          <ion-buttons slot="end">
+            <ion-button fill="clear" color="primary" (click)="editarMedida(medida)">
+              <ion-icon name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="eliminarMedida(medida.id)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <form (ngSubmit)="guardarMedida()">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Ingresar medida</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <ion-item>
+          <ion-label>Tipo</ion-label>
+          <ion-select [(ngModel)]="medidaForm.nombre_medida" name="tipo" interface="popover" required>
+            <ion-select-option value="peso">Peso</ion-select-option>
+            <ion-select-option value="altura">Altura</ion-select-option>
+            <ion-select-option value="cintura">Cintura</ion-select-option>
+          </ion-select>
+        </ion-item>        
+
+        <ion-item>
+          <ion-label position="floating">Valor</ion-label>
+          <ion-input type="number" [(ngModel)]="medidaForm.valor" name="valor" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Unidad</ion-label>
+          <ion-select [(ngModel)]="medidaForm.unidad_medida" name="unidad" interface="popover" required>
+            <ion-select-option value="kg">Kg</ion-select-option>
+            <ion-select-option value="cm">Cm</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="full" type="submit">
+      Guardar Medida
+    </ion-button>
+  </form>
+
 </ion-content>
