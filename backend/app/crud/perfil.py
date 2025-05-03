@@ -86,6 +86,8 @@ def crear_medida(db: Session, usuario_id: int, medida: schemas.MedidaCreate):
     db.refresh(db_medida)
     return db_medida
 
+# CREAR CRUD CREAR MEDIDA CON ID
+
 def obtener_medidas(db: Session, usuario_id: int):
     return db.query(Medida).filter_by(usuario_id=usuario_id).all()
 
