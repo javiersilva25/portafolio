@@ -61,7 +61,9 @@ def crear_perfil(db: Session, usuario_id: int, perfil: schemas.PerfilCreate):
     db_perfil = Perfil(
         fec_nac=perfil.fec_nac,
         altura=perfil.altura,
-        usuario_id=usuario_id
+        usuario_id=usuario_id,
+        sexo = perfil.sexo,
+        actividad = perfil.actividad
     )
     db.add(db_perfil)
     db.commit()
@@ -86,7 +88,18 @@ def crear_medida(db: Session, usuario_id: int, medida: schemas.MedidaCreate):
     db.refresh(db_medida)
     return db_medida
 
-# CREAR CRUD CREAR MEDIDA CON ID
+def crear_medida_por_nombre(db: Session, usuario_id: int, nombre_medida: str, medida: schemas.MedidaCreate):
+    db_medida = Medida(
+        fecha=medida.fecha,
+        nombre_medida=nombre_medida,
+        unidad_medida=medida.unidad_medida,
+        valor=medida.valor,
+        usuario_id=usuario_id
+    )
+    db.add(db_medida)
+    db.commit()
+    db.refresh(db_medida)
+    return db_medida
 
 def obtener_medidas(db: Session, usuario_id: int):
     return db.query(Medida).filter_by(usuario_id=usuario_id).all()

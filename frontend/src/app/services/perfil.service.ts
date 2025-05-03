@@ -60,10 +60,10 @@ export class PerfilService {
     return this.http.post(`${this.apiUrl}/medidas`, data, this.getHeaders());
   }
 
-  postMedidaId(id: number, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/medidas/${id}`, data, this.getHeaders());
+  postMedidaPorNombre(nombre_medida: string, medida: any) {
+    return this.http.post(`${this.apiUrl}/medidas/nombre/${nombre_medida}`, medida, this.getHeaders());
   }
-
+  
   updateMedida(id: number, data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/medidas/${id}`, data, this.getHeaders());
   }

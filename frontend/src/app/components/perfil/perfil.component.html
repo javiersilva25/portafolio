@@ -7,6 +7,7 @@
 <ion-content class="ion-padding">
 
   <!-- PERFIL DE USUARIO -->
+
   <form *ngIf="perfilForm" (ngSubmit)="guardarPerfil()">
     <ion-card>
       <ion-card-header>
@@ -19,8 +20,8 @@
           <ion-label position="floating">Fecha de Nacimiento</ion-label>
           <ion-datetime
             presentation="date"
-            [(ngModel)]="fecha"
-            name="fec_nac"
+            [value]="perfilForm.fec_nac"
+            (ionChange)="actualizarFecha($event)"
             required>
           </ion-datetime>
         </ion-item>
@@ -28,6 +29,23 @@
         <ion-item>
           <ion-label position="floating">Altura (cm)</ion-label>
           <ion-input type="number" [(ngModel)]="perfilForm.altura" name="altura" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Sexo</ion-label>
+          <ion-select interface="popover" [(ngModel)]="perfilForm.sexo" name="sexo" required>
+            <ion-select-option value="H">Hombre</ion-select-option>
+            <ion-select-option value="M">Mujer</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Actividad Fisica</ion-label>
+          <ion-select interface="popover" [(ngModel)]="perfilForm.actividad" name="actividad" required>
+            <ion-select-option value="Poco">Poco</ion-select-option>
+            <ion-select-option value="Moderado">Moderado</ion-select-option>
+            <ion-select-option value="Mucho">Mucho</ion-select-option>
+          </ion-select>
         </ion-item>
       </ion-card-content>
     </ion-card>
@@ -70,7 +88,6 @@
     </ion-card-content>
   </ion-card>
 
-
   <form *ngIf="objetivoForm" (ngSubmit)="guardarObjetivo()">
     <ion-card>
       <ion-card-header>
@@ -110,6 +127,8 @@
     </ion-button>
   </form>
 
+  <!-- MEDIDAS DEL USUARIO -->
+
   <ion-card>
     <ion-card-header>
       <ion-card-title>Medidas</ion-card-title>
@@ -117,19 +136,37 @@
 
     <ion-card-content>
       <ion-list>
-        <ion-item *ngFor="let medida of medidas">
-          <ion-label>
-            <h2>{{ medida.nombre_medida | titlecase }}: {{ medida.valor }} {{ medida.unidad_medida }} {{ medida.fecha | date: 'dd/MM/yyyy' }}</h2>
-          </ion-label>
-          <ion-buttons slot="end">
-            <ion-button fill="clear" color="primary" (click)="editarMedida(medida)">
-              <ion-icon name="create-outline"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" color="danger" (click)="eliminarMedida(medida.id)">
-              <ion-icon name="trash-outline"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-item>
+        <ion-item-group *ngFor="let group of medidas">
+          <ion-item-divider>
+            <ion-label>
+              <h2>ID: {{ group[0].id }}</h2> <!-- o group[0].id_usuario -->
+            </ion-label>
+            <ion-buttons slot="end">
+              <ion-button fill="clear" color="success" (click)="guardarMedidaPorNombre(group[0].nombre_medida, group[0])">
+                <ion-icon name="add-outline"></ion-icon> Añadir Medida
+              </ion-button>
+            </ion-buttons>
+          </ion-item-divider>
+
+          <ion-item>
+            <ion-label position="stacked">Valor</ion-label>
+            <ion-input [(ngModel)]="nuevoValor" type="number" placeholder="Ingrese el valor"></ion-input>
+          </ion-item>
+        
+          <ion-item *ngFor="let medida of group">
+            <ion-label>
+              <h2>{{ medida.nombre_medida | titlecase }}: {{ medida.valor }} {{ medida.unidad_medida }} {{ medida.fecha | date: 'dd/MM/yyyy' }}</h2>
+            </ion-label>
+            <ion-buttons slot="end">
+              <ion-button fill="clear" color="primary" (click)="editarMedida(medida)">
+                <ion-icon name="create-outline"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" color="danger" (click)="eliminarMedida(medida.id)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+        </ion-item-group>
       </ion-list>
     </ion-card-content>
   </ion-card>

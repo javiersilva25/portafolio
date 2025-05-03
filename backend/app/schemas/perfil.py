@@ -31,9 +31,13 @@ class Objetivo(BaseModel):
     class Config:
         orm_mode = True
 
+
+
 class PerfilBase(BaseModel):
     fec_nac: date
     altura: float
+    sexo: str
+    actividad: str
 
 
 class PerfilCreate(PerfilBase):
@@ -47,6 +51,8 @@ class Perfil(ObjetivoUsuarioBase):
     id: int
     class Config:
         from_attributes = True
+
+
 
 class MedidaBase(BaseModel):
     fecha: date

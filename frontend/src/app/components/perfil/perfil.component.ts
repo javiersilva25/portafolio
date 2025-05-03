@@ -9,7 +9,7 @@ import { PerfilService } from '../../services/perfil.service';
 })
 export class PerfilComponent implements OnInit {
 
-  fecha: string = new Date().toISOString().split('T')[0];
+  fecha: string = new Date().toISOString().slice(0, 10);
   objetivos: any[]=[];
   objetivosUsuario: any[] = [];
   objetivoEditandoId: number | null = null;
@@ -17,10 +17,13 @@ export class PerfilComponent implements OnInit {
   medidas: any[] = [];
   medidaEditandoId: number | null = null;
   fechaHoy: string = new Date().toISOString().slice(0, 10);
+  nuevoValor: number = 0; 
 
   perfilForm: any = {
     fec_nac: this.fecha,
-    altura: 0
+    altura: 0,
+    sexo: '',
+    actividad: ''
   };
 
   objetivoForm: any = {
@@ -42,6 +45,11 @@ export class PerfilComponent implements OnInit {
     this.obtenerObjetivos();
     this.obtenerObjetivosUsuario();
     this.obtenerMedidas();
+  }
+
+  actualizarFecha(event: any) {
+    const valor = event.detail.value; 
+    this.perfilForm.fec_nac = valor?.slice(0, 10); 
   }
 
   guardarPerfil() {
@@ -129,7 +137,7 @@ export class PerfilComponent implements OnInit {
   obtenerMedidas() {
     this.perfilService.getMedidas().subscribe({
       next: (data) => {
-        this.medidas = data;
+        this.medidas = this.agruparMedidasPorNombre(data);
         console.log(this.medidas); // BORRAR
       },
       error: (err) => {
@@ -165,12 +173,27 @@ export class PerfilComponent implements OnInit {
       })
     }
   }
-  
-  postMedidaId(id: number, medida: number) {
-    this.perfilService.postMedidaId(id, {medida}).subscribe({
+
+  guardarMedidaPorNombre(nombre_medida: string, medida: any) {
+    // Verificar si el valor fue ingresado
+    if (this.nuevoValor === 0) {
+      console.error('Por favor ingresa un valor');
+      return;
+    }
+
+    // Preparar la medida con el nuevo valor
+    const nuevaMedida = {
+      ...medida,
+      valor: this.nuevoValor,  // Establecer el valor ingresado
+      fecha: this.fechaHoy // o la fecha que elijas
+    };
+
+    // Llamar al servicio para guardar la medida
+    this.perfilService.postMedidaPorNombre(nombre_medida, nuevaMedida).subscribe({
       next: () => {
         console.log('Medida guardada correctamente');
         this.obtenerMedidas();
+        this.nuevoValor = 0; // Limpiar el campo de entrada después de guardar
       },
       error: (err) => {
         console.error('Error al guardar medida', err);
@@ -200,5 +223,19 @@ export class PerfilComponent implements OnInit {
         }
       });
     }
+  }
+
+  agruparMedidasPorNombre(medidas: any[]): any[] {
+    const grupos: { [key: string]: any[] } = {};
+  
+    for (const medida of medidas) {
+      const nombre = medida.nombre_medida;
+      if (!grupos[nombre]) {
+        grupos[nombre] = [];
+      }
+      grupos[nombre].push(medida);
+    }
+  
+    return Object.values(grupos);
   }
 }
