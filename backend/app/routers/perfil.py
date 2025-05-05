@@ -77,6 +77,18 @@ def create_perfil(
 ):
     return crud.crear_perfil(db, usuario.id, perfil)
 
+@router.put("/perfil", response_model=schemas.PerfilBase)
+def update_perfil(
+    perfil: schemas.PerfilUpdate,
+    db: Session = Depends(get_db),
+    usuario: UsuarioToken = Depends(obtener_usuario_actual)
+):
+    perfil_actualizado = crud.actualizar_perfil(db, usuario.id, perfil)
+    if not perfil_actualizado:
+        raise HTTPException(status_code=404, detail="Perfil no encontrado")
+    return perfil_actualizado
+
+
 
 
 @router.get("/medidas", response_model=list[schemas.Medida])

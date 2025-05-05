@@ -9,7 +9,8 @@ class Perfil(Base):
     edad = Column(Integer, index=True)
     altura = Column(Float, index=True)
     actividad = Column(String, index=True)
-    sexo = Column(String, index=True) 
+    sexo = Column(String, index=True)
+    peso = Column(Float, index=True)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
 
     usuario = relationship("Usuario", back_populates="perfil")

@@ -9,7 +9,6 @@ import { PerfilService } from '../../services/perfil.service';
 })
 export class PerfilComponent implements OnInit {
 
-  fecha: string = new Date().toISOString().slice(0, 10);
   objetivos: any[]=[];
   objetivosUsuario: any[] = [];
   objetivoEditandoId: number | null = null;
@@ -20,11 +19,16 @@ export class PerfilComponent implements OnInit {
   nuevoValor: number = 0; 
 
   perfilForm: any = {
-    fec_nac: this.fecha,
+    edad: 0,
     altura: 0,
+    peso: 0,
     sexo: '',
     actividad: ''
   };
+
+  metabolismoBasal: number = 0;
+  caloriasRequeridas: number = 0;
+
 
   objetivoForm: any = {
     accion: '',
@@ -39,9 +43,12 @@ export class PerfilComponent implements OnInit {
     valor: 0
   };
 
+  perfilId: number | null = null;
+
   constructor(private perfilService: PerfilService) {}
 
   ngOnInit() {
+    this.obtenerPerfil();
     this.obtenerObjetivos();
     this.obtenerObjetivosUsuario();
     this.obtenerMedidas();
@@ -53,14 +60,42 @@ export class PerfilComponent implements OnInit {
   }
 
   guardarPerfil() {
-    this.perfilService.createPerfil(this.perfilForm).subscribe({
-      next: (response) => {
-        console.log('Perfil guardado correctamente', response);
+    this.calcularMetabolismoBasal();
+    this.calcularCaloriasRequeridas();
+  
+    if (this.perfilId !== null) {
+      this.perfilService.updatePerfil(this.perfilId, this.perfilForm).subscribe({
+        next: (response) => {
+          console.log('Perfil actualizado correctamente', response);
+        },
+        error: (err) => {
+          console.error('Error al actualizar perfil', err);
+        }
+      });
+    } else {
+      this.perfilService.createPerfil(this.perfilForm).subscribe({
+        next: (response) => {
+          console.log('Perfil creado correctamente', response);
+          this.perfilId = response.id;
+        },
+        error: (err) => {
+          console.error('Error al crear perfil', err);
+        }
+      });
+    }
+  }
+  
+
+  obtenerPerfil() {
+    this.perfilService.getPerfil().subscribe({
+      next: (data) => {
+        this.perfilForm = data;
+        this.perfilId = data.id;
       },
       error: (err) => {
-        console.error('Error al guardar perfil', err);
+        console.error('Error al obtener perfil', err);
       }
-      });
+    });
   }
   
   guardarObjetivo() {
@@ -235,7 +270,36 @@ export class PerfilComponent implements OnInit {
       }
       grupos[nombre].push(medida);
     }
-  
+
     return Object.values(grupos);
   }
+
+  calcularMetabolismoBasal() {
+    const { edad, altura, peso, sexo } = this.perfilForm;
+    if (sexo === 'H') {
+      this.metabolismoBasal = 88.362 + (13.397 * peso) + (4.799 * altura) - (5.677 * edad);
+    } else if (sexo === 'M') {
+      this.metabolismoBasal = 447.593 + (9.247 * peso) + (3.098 * altura) - (4.330 * edad);
+    }
+  }
+
+  calcularCaloriasRequeridas() {
+    const { actividad } = this.perfilForm;
+    let factorActividad = 1.2;
+
+    switch (actividad) {
+      case 'Poco':
+        factorActividad = 1.2;
+        break;
+      case 'Moderado':
+        factorActividad = 1.55;
+        break;
+      case 'Mucho':
+        factorActividad = 1.9;
+        break;
+    }
+
+    this.caloriasRequeridas = this.metabolismoBasal * factorActividad;
+  }
+
 }

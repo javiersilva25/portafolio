@@ -24,6 +24,14 @@ export class PerfilService {
     return this.http.get<any[]>(`${this.apiUrl}/perfil`, this.getHeaders());
   }
 
+  getPerfilPorId(id: number): Observable<any> {
+    return this.http.get<any[]>(`${this.apiUrl}/perfil/${id}`, this.getHeaders());
+  }
+
+  updatePerfil(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/perfil/${id}`, data, this.getHeaders());
+  }
+
   createPerfil(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/perfil`, data, this.getHeaders());
   }
