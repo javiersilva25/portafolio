@@ -34,7 +34,7 @@ class Objetivo(BaseModel):
 
 
 class PerfilBase(BaseModel):
-    fec_nac: date
+    edad: int
     altura: float
     sexo: str
     actividad: str

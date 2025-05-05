@@ -6,7 +6,7 @@ class Perfil(Base):
     __tablename__ = "perfil_usuario"
 
     id = Column(Integer, primary_key=True, index=True)
-    fec_nac = Column(Date, index=True)
+    edad = Column(Integer, index=True)
     altura = Column(Float, index=True)
     actividad = Column(String, index=True)
     sexo = Column(String, index=True) 
