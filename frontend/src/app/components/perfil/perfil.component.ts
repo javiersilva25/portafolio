@@ -277,9 +277,9 @@ export class PerfilComponent implements OnInit {
   calcularMetabolismoBasal() {
     const { edad, altura, peso, sexo } = this.perfilForm;
     if (sexo === 'H') {
-      this.metabolismoBasal = 88.362 + (13.397 * peso) + (4.799 * altura) - (5.677 * edad);
+      this.metabolismoBasal = (10 * peso) + (6.25 * altura) - (5 * edad) + 5;
     } else if (sexo === 'M') {
-      this.metabolismoBasal = 447.593 + (9.247 * peso) + (3.098 * altura) - (4.330 * edad);
+      this.metabolismoBasal = (10 * peso) + (6.25 * altura) - (5 * edad) - 161;
     }
   }
 
