@@ -8,8 +8,8 @@ from fastapi import HTTPException
 
 def crear_objetivo_usuario(db: Session, usuario_id: int, objetivo_usuario: schemas.ObjetivoUsuarioCreate):
     db_objetivo_usuario = ObjetivoUsuario(
-        accion=objetivo_usuario.accion,
-        valor=objetivo_usuario.valor,
+        peso_objetivo=objetivo_usuario.peso_objetivo,
+        velocidad=objetivo_usuario.velocidad,
         id_objetivo=objetivo_usuario.id_objetivo,
         usuario_id=usuario_id
     )
@@ -59,7 +59,8 @@ def crear_perfil(db: Session, usuario_id: int, perfil: schemas.PerfilCreate):
             detail="El perfil ya existe para este usuario."
         )
     db_perfil = Perfil(
-        fec_nac=perfil.fec_nac,
+        edad=perfil.edad,
+        peso = perfil.peso,
         altura=perfil.altura,
         usuario_id=usuario_id,
         sexo = perfil.sexo,

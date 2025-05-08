@@ -13,54 +13,48 @@
       <ion-card-header>
         <ion-card-title>Información Personal</ion-card-title>
       </ion-card-header>
-
+  
       <ion-card-content>
-
+  
         <ion-item>
           <ion-label position="floating">Edad</ion-label>
-          <ion-input type="number" [(ngModel)]="perfilForm.edad" name="edad" (ionChange) = "guardarPerfil()"required></ion-input>
+          <ion-input type="number" [(ngModel)]="perfilForm.edad" name="edad" required></ion-input>
         </ion-item>
-
+  
         <ion-item>
           <ion-label position="floating">Peso (Kg)</ion-label>
-          <ion-input type="number" [(ngModel)]="perfilForm.peso" name="peso" (ionChange) = "guardarPerfil()" required></ion-input>
+          <ion-input type="number" [(ngModel)]="perfilForm.peso" name="peso" required></ion-input>
         </ion-item>
-
+  
         <ion-item>
           <ion-label position="floating">Altura (cm)</ion-label>
-          <ion-input type="number" [(ngModel)]="perfilForm.altura" name="altura" (ionChange) = "guardarPerfil()" required></ion-input>
+          <ion-input type="number" [(ngModel)]="perfilForm.altura" name="altura" required></ion-input>
         </ion-item>
-
+  
         <ion-item>
           <ion-label>Sexo</ion-label>
-          <ion-select interface="popover" [(ngModel)]="perfilForm.sexo" name="sexo" (ionChange) = "guardarPerfil()" required>
+          <ion-select interface="popover" [(ngModel)]="perfilForm.sexo" name="sexo" required>
             <ion-select-option value="H">Hombre</ion-select-option>
             <ion-select-option value="M">Mujer</ion-select-option>
           </ion-select>
         </ion-item>
-
+  
         <ion-item>
-          <ion-label>Actividad Fisica</ion-label>
-          <ion-select interface="popover" [(ngModel)]="perfilForm.actividad" name="actividad" (ionChange) = "guardarPerfil()" required>
+          <ion-label>Actividad Física</ion-label>
+          <ion-select interface="popover" [(ngModel)]="perfilForm.actividad" name="actividad" required>
             <ion-select-option value="Poco">Poco</ion-select-option>
             <ion-select-option value="Moderado">Moderado</ion-select-option>
             <ion-select-option value="Mucho">Mucho</ion-select-option>
           </ion-select>
         </ion-item>
+  
+        <ion-button expand="full" (click)="guardarPerfil()">
+          Guardar Perfil
+        </ion-button>
+  
       </ion-card-content>
-    </ion-card>   
-
+    </ion-card>
   </form>
-
-  <ion-card *ngIf="metabolismoBasal && caloriasRequeridas">
-    <ion-card-header>
-      <ion-card-title>Metabolismo y Calorías</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p><strong>Metabolismo Basal:</strong> {{ metabolismoBasal | number:'1.0-0' }} kcal</p>
-      <p><strong>Calorías Requeridas Diarias:</strong> {{ caloriasRequeridas | number:'1.0-0' }} kcal</p>
-    </ion-card-content>
-  </ion-card> 
   
 
   <!-- OBJETIVOS DEL USUARIO -->
@@ -101,39 +95,30 @@
       <ion-card-header>
         <ion-card-title>Objetivo Personal</ion-card-title>
       </ion-card-header>
-
+  
       <ion-card-content>
-
+  
         <ion-item>
-          <ion-label>Objetivo</ion-label>
-          <ion-select [(ngModel)]="objetivoForm.id_objetivo" name="id_objetivo" interface="popover" required>
-            <ion-select-option *ngFor="let obj of objetivos" [value]="obj.id">
-              {{ obj.descripcion }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>        
-
+          <ion-label position="floating">Peso Objetivo (kg)</ion-label>
+          <ion-input type="number" [(ngModel)]="objetivoForm.peso_objetivo" name="peso_objetivo" required></ion-input>
+        </ion-item>
+  
         <ion-item>
-          <ion-label>Acción</ion-label>
-          <ion-select [(ngModel)]="objetivoForm.accion" name="accion" interface="popover" required>
-            <ion-select-option value="aumentar">Aumentar</ion-select-option>
-            <ion-select-option value="mantener">Mantener</ion-select-option>
-            <ion-select-option value="disminuir">Disminuir</ion-select-option>
+          <ion-label>Velocidad</ion-label>
+          <ion-select [(ngModel)]="objetivoForm.velocidad" name="velocidad" interface="popover" required>
+            <ion-select-option value="rapido">Rápido</ion-select-option>
+            <ion-select-option value="pausado">Pausado</ion-select-option>
           </ion-select>
         </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Valor</ion-label>
-          <ion-input type="number" [(ngModel)]="objetivoForm.valor" name="valor" required></ion-input>
-        </ion-item>
-
+  
       </ion-card-content>
     </ion-card>
-
+  
     <ion-button expand="full" type="submit">
       Guardar Objetivo
     </ion-button>
   </form>
+  
 
   <!-- MEDIDAS DEL USUARIO -->
 
@@ -216,5 +201,26 @@
       Guardar Medida
     </ion-button>
   </form>
+
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Metabolismo y Calorías</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Metabolismo Basal:</strong> {{ metabolismoBasal | number:'1.0-0' }} kcal</p>
+      <p><strong>Calorías Requeridas Diarias:</strong> {{ caloriasRequeridas | number:'1.0-0' }} kcal</p>
+    </ion-card-content>
+  </ion-card> 
+  
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Calorías Finales Ajustadas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Calorías según Objetivo:</strong> {{ caloriasFinales | number:'1.0-0' }} kcal</p>
+    </ion-card-content>
+  </ion-card>
+  
 
 </ion-content>

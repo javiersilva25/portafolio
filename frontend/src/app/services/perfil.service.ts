@@ -21,8 +21,9 @@ export class PerfilService {
   }
 
   getPerfil(): Observable<any> {
-    return this.http.get<any[]>(`${this.apiUrl}/perfil`, this.getHeaders());
+    return this.http.get<any>(`${this.apiUrl}/perfil`, this.getHeaders());
   }
+  
 
   getPerfilPorId(id: number): Observable<any> {
     return this.http.get<any[]>(`${this.apiUrl}/perfil/${id}`, this.getHeaders());

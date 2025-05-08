@@ -14,6 +14,6 @@ class Usuario(Base):
     hashed_password = Column(String)
 
     comidas = relationship("Comida", back_populates="usuario", cascade="all, delete")
-    perfil = relationship("Perfil", back_populates="usuario", uselist=False)
+    perfil = relationship("Perfil", back_populates="usuario", uselist=False, lazy="select")
     medidas = relationship("Medida", back_populates="usuario", cascade="all, delete")
     objetivo_usuario = relationship("ObjetivoUsuario", back_populates="usuario", cascade="all, delete")

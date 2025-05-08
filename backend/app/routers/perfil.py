@@ -67,7 +67,11 @@ def get_perfil(
     db: Session = Depends(get_db),
     usuario: UsuarioToken = Depends(obtener_usuario_actual)
 ):
-    return crud.obtener_perfil(db, usuario.id)
+    perfil = crud.obtener_perfil(db, usuario.id)
+    if not perfil:
+        raise HTTPException(status_code=404, detail="Perfil no encontrado")
+    return perfil
+
 
 @router.post("/perfil", response_model=schemas.PerfilBase)
 def create_perfil(

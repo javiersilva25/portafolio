@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Literal, Optional
 from datetime import date
 
 
@@ -11,9 +11,8 @@ class ListaObjetivos(BaseModel):
         from_attributes = True
 
 class ObjetivoUsuarioBase(BaseModel):
-    accion: str
-    valor: float
-    id_objetivo: int
+    peso_objetivo: float
+    velocidad: Literal["rapido", "pausado"]
 
 class ObjetivoUsuarioCreate(ObjetivoUsuarioBase):
     pass
@@ -23,10 +22,8 @@ class ObjetivoUsuarioUpdate(ObjetivoUsuarioBase):
     pass
 
 class Objetivo(BaseModel):
-    id: int
-    accion: str
-    valor: float
-    descripcion_objetivo: str  
+    peso_objetivo: float
+    velocidad: Literal["rapido", "pausado"]
 
     class Config:
         orm_mode = True
@@ -35,6 +32,7 @@ class Objetivo(BaseModel):
 
 class PerfilBase(BaseModel):
     edad: int
+    peso: float
     altura: float
     sexo: str
     actividad: str
@@ -47,10 +45,11 @@ class PerfilCreate(PerfilBase):
 class PerfilUpdate(PerfilBase):
     pass
 
-class Perfil(ObjetivoUsuarioBase):
+class Perfil(PerfilBase):
     id: int
     class Config:
         from_attributes = True
+
 
 
 
