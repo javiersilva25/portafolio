@@ -18,35 +18,42 @@ def crear_objetivo_usuario(db: Session, usuario_id: int, objetivo_usuario: schem
     db.refresh(db_objetivo_usuario)
     return db_objetivo_usuario
 
-def obtener_objetivo_usuario(db: Session, usuario_id: int):
-    resultado = db.query(ObjetivoUsuario, Objetivo.descripcion).\
-        join(Objetivo).\
-        filter(ObjetivoUsuario.usuario_id == usuario_id).\
-        all()
-
-    return [
-        {"id": obj.id, "accion": obj.accion, "valor": obj.valor, "descripcion_objetivo": descripcion}
-        for obj, descripcion in resultado
-    ]
 
 def obtener_objetivos(db: Session):
     return db.query(Objetivo).all()
 
+
+def obtener_objetivo_usuario(db: Session, usuario_id: int):
+    return db.query(ObjetivoUsuario).filter_by(usuario_id=usuario_id).all()
+
+
 def actualizar_objetivo_usuario(db: Session, usuario_id: int, objetivo_usuario_id: int, objetivo_usuario_data: schemas.ObjetivoUsuarioUpdate):
-    objetivo_usuario = db.query(ObjetivoUsuario).filter(ObjetivoUsuario.id == objetivo_usuario_id, usuario_id == usuario_id).first()
+    objetivo_usuario = db.query(ObjetivoUsuario).filter(
+        ObjetivoUsuario.id == objetivo_usuario_id,
+        ObjetivoUsuario.usuario_id == usuario_id
+    ).first()
+
     if objetivo_usuario:
-        objetivo_usuario.accion = objetivo_usuario_data.accion
-        objetivo_usuario.valor = objetivo_usuario_data.valor
+        objetivo_usuario.peso_objetivo = objetivo_usuario_data.peso_objetivo
+        objetivo_usuario.velocidad = objetivo_usuario_data.velocidad
         objetivo_usuario.id_objetivo = objetivo_usuario_data.id_objetivo
         db.commit()
+        db.refresh(objetivo_usuario)
+
     return objetivo_usuario
 
+
 def eliminar_objetivo_usuario(db: Session, usuario_id: int, objetivo_usuario_id: int):
-    objetivo_usuario = db.query(ObjetivoUsuario).filter( ObjetivoUsuario.id == objetivo_usuario_id, usuario_id==usuario_id).first()
+    objetivo_usuario = db.query(ObjetivoUsuario).filter(
+        ObjetivoUsuario.id == objetivo_usuario_id,
+        ObjetivoUsuario.usuario_id == usuario_id
+    ).first()
+
     if objetivo_usuario:
         db.delete(objetivo_usuario)
         db.commit()
         return True
+
     return False
 
 

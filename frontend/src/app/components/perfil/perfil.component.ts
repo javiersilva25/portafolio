@@ -121,7 +121,7 @@ export class PerfilComponent implements OnInit {
         next: () => {
           console.log('Objetivo actualizado correctamente');
           this.objetivoEditandoId = null;
-          this.objetivoForm = { accion: '', valor: 0, id_objetivo: null };
+          this.objetivoForm = { peso_objetivo: 0, velocidad: 'pausado', id_objetivo: 1 };
           this.obtenerObjetivosUsuario();
         },
         error: (err) => {
@@ -132,7 +132,7 @@ export class PerfilComponent implements OnInit {
       this.perfilService.createObjetivo(this.objetivoForm).subscribe({
         next: () => {
           console.log('Objetivo guardado correctamente');
-          this.objetivoForm = { accion: '', valor: 0, id_objetivo: null };
+          this.objetivoForm = { peso_objetivo: 0, velocidad: 'pausado', id_objetivo: 1 };
           this.obtenerObjetivosUsuario();
         },
         error: (err) => {
@@ -141,6 +141,7 @@ export class PerfilComponent implements OnInit {
       });
     }
   }
+  
 
   obtenerObjetivos(){
     this.perfilService.getObjetivos().subscribe((data) => {
@@ -154,22 +155,29 @@ export class PerfilComponent implements OnInit {
     this.perfilService.getObjetivosUsuario().subscribe({
       next: (data) => {
         this.objetivosUsuario = data;
-        console.log(this.objetivosUsuario); // BORRAR
+        this.calcularCaloriasFinalesPorObjetivo();
       },
       error: (err) => {
-        console.error('Error al obtener objetivos del usuario', err);
+        if (err.status === 404) {
+          this.objetivosUsuario = [];
+          this.caloriasFinales = this.caloriasRequeridas;
+        } else {
+          console.error('Error al obtener objetivos del usuario', err);
+        }
       }
     });
   }
+  
 
   editarObjetivo(obj: any) {
     this.objetivoForm = {
-      accion: obj.accion,
-      valor: obj.valor,
+      peso_objetivo: obj.peso_objetivo,
+      velocidad: obj.velocidad,
       id_objetivo: obj.id_objetivo
     };
     this.objetivoEditandoId = obj.id;
   }
+  
   
   eliminarObjetivo(id: number) {
     if (confirm('¿Estás seguro de que quieres eliminar este objetivo?')) {

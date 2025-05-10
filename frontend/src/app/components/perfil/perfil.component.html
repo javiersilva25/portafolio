@@ -54,6 +54,27 @@
   
       </ion-card-content>
     </ion-card>
+
+    
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Metabolismo y Calorías</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Metabolismo Basal:</strong> {{ metabolismoBasal | number:'1.0-0' }} kcal</p>
+            <p><strong>Calorías Requeridas Diarias:</strong> {{ caloriasRequeridas | number:'1.0-0' }} kcal</p>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Calorías Finales Ajustadas</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p><strong>Calorías según Objetivo:</strong> {{ caloriasFinales | number:'1.0-0' }} kcal</p>
+          </ion-card-content>
+        </ion-card>
+
   </form>
   
 
@@ -68,8 +89,8 @@
       <ion-list>
         <ion-item *ngFor="let obj of objetivosUsuario">
           <ion-label>
-            <h2>{{ obj.accion | titlecase }} {{ obj.descripcion }}</h2>
-            <p>Valor: {{ obj.valor }}</p>
+            <h2>Peso Objetivo: {{ obj.peso_objetivo }} kg</h2>
+            <p>Velocidad: {{ obj.velocidad | titlecase }}</p>
           </ion-label>
           <ion-buttons slot="end">
             <ion-button fill="clear" color="primary" (click)="editarObjetivo(obj)">
@@ -79,7 +100,7 @@
               <ion-icon name="trash-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
-        </ion-item>
+        </ion-item>        
       </ion-list>
     </ion-card-content>
   </ion-card>
@@ -201,26 +222,6 @@
       Guardar Medida
     </ion-button>
   </form>
-
-
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Metabolismo y Calorías</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p><strong>Metabolismo Basal:</strong> {{ metabolismoBasal | number:'1.0-0' }} kcal</p>
-      <p><strong>Calorías Requeridas Diarias:</strong> {{ caloriasRequeridas | number:'1.0-0' }} kcal</p>
-    </ion-card-content>
-  </ion-card> 
-  
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Calorías Finales Ajustadas</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p><strong>Calorías según Objetivo:</strong> {{ caloriasFinales | number:'1.0-0' }} kcal</p>
-    </ion-card-content>
-  </ion-card>
   
 
 </ion-content>

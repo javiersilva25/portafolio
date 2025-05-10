@@ -15,7 +15,7 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/objetivos/usuario", response_model=list[schemas.Objetivo])
+@router.get("/objetivos/usuario", response_model=list[schemas.ObjetivoUsuario])
 def get_objetivo_usuario(
     db: Session = Depends(get_db),
     usuario: UsuarioToken = Depends(obtener_usuario_actual)
