@@ -28,4 +28,8 @@ export class RegisterPage {
       }
     });
   }
+
+  goToLogin() {
+    this.navCtrl.navigateRoot('/login');
+  }
 }
