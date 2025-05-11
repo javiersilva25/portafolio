@@ -40,27 +40,6 @@ ion-button {
   margin-top: 1rem;
 }
 
-ion-button[type="submit"],
-ion-button:not([fill="clear"]):not([color="danger"]) {
-  --background: #4CAF50;
-  --color: white;
-}
-
-ion-button[color="danger"] {
-  --background: #f44336;
-  --color: white;
-}
-
-ion-button[color="primary"] {
-  --background: #2196F3;
-  --color: white;
-}
-
-ion-button[color="success"] {
-  --background: #009688;
-  --color: white;
-}
-
 /* Grupos de medidas */
 ion-item-divider {
   background-color: #e0f7fa;

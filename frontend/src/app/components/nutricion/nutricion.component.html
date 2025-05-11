@@ -6,19 +6,20 @@
 
 <ion-content class="ion-padding">
 
-  <ion-item>
-    <ion-label position="stacked">Seleccionar fecha</ion-label>
-    <ion-datetime
-      [(ngModel)]="fechaHoy"
-      (ionChange)="cargarComidasPorFecha()"
-      presentation="date"
-      [preferWheel]="true"
-      class="fecha-wheel">
-    </ion-datetime>
-  </ion-item>
+  <ion-card>
+      <ion-label position="stacked">Seleccionar fecha</ion-label>
+      <ion-datetime
+        [(ngModel)]="fechaHoy"
+        (ionChange)="cargarComidasPorFecha()"
+        presentation="date"
+        [preferWheel]="true"
+        size="cover"
+        >
+      </ion-datetime>
+  </ion-card>
   
 
-  <ion-card color="light">
+  <ion-card color="primary">
     <ion-card-header>
       <ion-card-title>Total del día</ion-card-title>
       <ion-card-subtitle>
