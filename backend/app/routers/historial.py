@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.crud import historial as crud_historial
@@ -31,3 +31,14 @@ def listar_historial(
     usuario: UsuarioToken = Depends(obtener_usuario_actual)
 ):
     return crud_historial.listar_historial(db, usuario.id)
+
+@router.delete("/historial/{rutina_id}")
+def eliminar_rutina(
+    rutina_id: int,
+    db: Session = Depends(get_db),
+    usuario: UsuarioToken = Depends(obtener_usuario_actual)
+):
+    success = crud_historial.eliminar_registro_historial(db, usuario.id, rutina_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Historial no encontrado")
+    return {"mensaje": "Rutina eliminada correctamente"}

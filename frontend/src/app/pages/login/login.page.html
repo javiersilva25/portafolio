@@ -1,6 +1,6 @@
 <ion-content class="login-content" fullscreen>
   <ion-card class="login-card">
-    <form (ngSubmit)="onSubmit()">
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
       <ion-card-header>
         <ion-card-title>Bienvenido</ion-card-title>
       </ion-card-header>
@@ -11,15 +11,20 @@
           <ion-label position="floating">Nombre de usuario</ion-label>
           <ion-input [(ngModel)]="credentials.username" name="username" required></ion-input>
         </ion-item>
+        <ion-text color="danger" *ngIf="loginForm.submitted && !credentials.username">
+          <p class="validation-msg">El nombre de usuario es obligatorio.</p>
+        </ion-text>
 
         <ion-item lines="none">
           <ion-label position="floating">Contraseña</ion-label>
-          <ion-input [(ngModel)]="credentials.password" name="password" type="password" required></ion-input>
+          <ion-input [(ngModel)]="credentials.password" name="password" type="password" required minlength="6" maxlength="6"></ion-input>
         </ion-item>
+        <ion-text color="danger" *ngIf="loginForm.submitted && (!credentials.password || credentials.password.length < 6)">
+          <p class="validation-msg">La contraseña debe tener al menos 6 caracteres.</p>
+        </ion-text>
 
         <ion-button expand="block" type="submit" class="ion-margin-top">Iniciar sesión</ion-button>
 
-        <!-- Label estilo enlace -->
         <div class="register-label" (click)="goToRegister()">
           ¿No tienes cuenta? <span>Regístrate</span>
         </div>

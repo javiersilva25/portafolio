@@ -17,6 +17,16 @@ export class LoginPage {
   constructor(private userService: UserService, private navCtrl: NavController) {}
 
   onSubmit() {
+    if (!this.credentials.username || !this.credentials.password) {
+      alert('Por favor completa todos los campos.');
+      return;
+    }
+
+    if (this.credentials.password.length < 8) {
+      alert('La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+
     this.userService.login(this.credentials).subscribe({
       next: (response) => {
         console.log('Login exitoso', response);
@@ -25,9 +35,11 @@ export class LoginPage {
       },
       error: (error) => {
         console.error('Error en login', error);
+        alert('Usuario o contraseña incorrectos.');
       }
-    });
-  }
+  });
+}
+
 
   goToRegister() {
     this.navCtrl.navigateRoot('/register');

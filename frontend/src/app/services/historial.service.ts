@@ -27,4 +27,8 @@ export class HistorialService {
   listarHistorial(): Observable<any> {
     return this.http.get(`${this.apiUrl}/historial`, this.getHeaders());
   }
+
+  eliminarRegistro(rutinaId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/historial/${rutinaId}`, this.getHeaders());
+  }
 }

@@ -36,6 +36,20 @@ export class HistorialPage implements OnInit {
     });
   }
 
+  eliminar(rutinaId: number) {
+  if (confirm('¿Estás seguro de que quieres eliminar esta rutina del historial?')) {
+    this.historialService.eliminarRegistro(rutinaId).subscribe({
+      next: () => {
+        console.log('Rutina eliminada correctamente');
+        this.cargarHistorial();
+      },
+      error: (err) => {
+        console.error('Error al eliminar rutina', err);
+      }
+    });
+  }
+}
+
   volverAlHome() {
     this.navCtrl.navigateRoot('/home');
   }

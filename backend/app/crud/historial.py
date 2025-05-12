@@ -25,3 +25,11 @@ def listar_historial(db: Session, usuario_id: int):
         .all()
     )
 
+def eliminar_registro_historial(db: Session, usuario_id: int, historial_id: int):
+    historial = db.query(Historial).filter(Historial.id == historial_id, Historial.usuario_id == usuario_id).first()
+    if historial:
+        db.delete(historial)
+        db.commit()
+        return True
+    return False
+

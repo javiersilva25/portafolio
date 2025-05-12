@@ -27,6 +27,9 @@
               </ion-label>
             </ion-item>
           </ion-list>
+          <ion-button color="red" fill="clear" (click)="eliminar(item.id)">
+                <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
         </div>
         <div *ngIf="!item.rutina?.ejercicios?.length">
           <ion-text color="medium">
