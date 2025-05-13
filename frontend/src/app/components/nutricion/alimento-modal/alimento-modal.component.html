@@ -1,45 +1,55 @@
-<ion-item>
-  <ion-label>Crear nuevo alimento</ion-label>
-  <ion-toggle [(ngModel)]="crearNuevo"></ion-toggle>
-</ion-item>
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Gestión de Alimento</ion-card-title>
+  </ion-card-header>
 
-<ng-container *ngIf="!crearNuevo">
-  <ion-item>
-    <ion-label>Alimento</ion-label>
-    <ion-select [(ngModel)]="alimentoSeleccionado">
-      <ion-select-option *ngFor="let alimento of alimentos" [value]="alimento">
-        {{ alimento.nombre }}
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
-</ng-container>
+  <ion-card-content>
+    <ion-item>
+      <ion-label>Crear nuevo alimento</ion-label>
+      <ion-toggle [(ngModel)]="crearNuevo"></ion-toggle>
+    </ion-item>
 
-<ng-container *ngIf="crearNuevo">
-  <ion-item>
-    <ion-label position="floating">Nombre</ion-label>
-    <ion-input [(ngModel)]="nuevoAlimento.nombre"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Proteínas (en 100g)</ion-label>
-    <ion-input type="number" [(ngModel)]="nuevoAlimento.proteinas" (ionInput)="calcularCalorias()"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Carbohidratos (en 100g)</ion-label>
-    <ion-input type="number" [(ngModel)]="nuevoAlimento.carbohidratos" (ionInput)="calcularCalorias()"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Grasas (en 100g)</ion-label>
-    <ion-input type="number" [(ngModel)]="nuevoAlimento.grasas" (ionInput)="calcularCalorias()"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Calorías</ion-label>
-    <ion-input type="number" [(ngModel)]="nuevoAlimento.calorias"></ion-input>
-  </ion-item>
-</ng-container>
+    <ng-container *ngIf="!crearNuevo">
+      <ion-item>
+        <ion-label>Seleccionar Alimento</ion-label>
+        <ion-select [(ngModel)]="alimentoSeleccionado" interface="popover">
+          <ion-select-option *ngFor="let alimento of alimentos" [value]="alimento">
+            {{ alimento.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ng-container>
 
-<ion-item>
-  <ion-label position="floating">Cantidad consumida (g)</ion-label>
-  <ion-input type="number" [(ngModel)]="gramos"></ion-input>
-</ion-item>
+    <ng-container *ngIf="crearNuevo">
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="nuevoAlimento.nombre"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Proteínas (en 100g)</ion-label>
+        <ion-input type="number" [(ngModel)]="nuevoAlimento.proteinas" (ionInput)="calcularCalorias()"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Carbohidratos (en 100g)</ion-label>
+        <ion-input type="number" [(ngModel)]="nuevoAlimento.carbohidratos" (ionInput)="calcularCalorias()"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Grasas (en 100g)</ion-label>
+        <ion-input type="number" [(ngModel)]="nuevoAlimento.grasas" (ionInput)="calcularCalorias()"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Calorías</ion-label>
+        <ion-input type="number" [(ngModel)]="nuevoAlimento.calorias"></ion-input>
+      </ion-item>
+    </ng-container>
 
-<ion-button expand="full" (click)="guardar()">Guardar</ion-button>
+    <ion-item>
+      <ion-label position="floating">Cantidad consumida (g)</ion-label>
+      <ion-input type="number" [(ngModel)]="gramos"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="guardar()">Guardar</ion-button>
+    <ion-button expand="block" color="light" (click)="cancelar()">Volver</ion-button>
+  </ion-card-content>
+</ion-card>
+

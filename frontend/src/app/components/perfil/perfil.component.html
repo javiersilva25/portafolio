@@ -8,29 +8,24 @@
 
   <!-- PERFIL DE USUARIO -->
 
-  <form *ngIf="!perfilExiste">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Información Personal</ion-card-title>
-      </ion-card-header>
-  
-      <ion-card-content>
-  
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Información Personal</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form *ngIf="!perfilExiste">
         <ion-item>
           <ion-label position="floating">Edad</ion-label>
           <ion-input type="number" [(ngModel)]="perfilForm.edad" name="edad" required></ion-input>
         </ion-item>
-  
         <ion-item>
           <ion-label position="floating">Peso (Kg)</ion-label>
           <ion-input type="number" [(ngModel)]="perfilForm.peso" name="peso" required></ion-input>
         </ion-item>
-  
         <ion-item>
           <ion-label position="floating">Altura (cm)</ion-label>
           <ion-input type="number" [(ngModel)]="perfilForm.altura" name="altura" required></ion-input>
         </ion-item>
-  
         <ion-item>
           <ion-label>Sexo</ion-label>
           <ion-select interface="popover" [(ngModel)]="perfilForm.sexo" name="sexo" required>
@@ -38,7 +33,6 @@
             <ion-select-option value="M">Mujer</ion-select-option>
           </ion-select>
         </ion-item>
-  
         <ion-item>
           <ion-label>Actividad Física</ion-label>
           <ion-select interface="popover" [(ngModel)]="perfilForm.actividad" name="actividad" required>
@@ -47,61 +41,44 @@
             <ion-select-option value="Mucho">Mucho</ion-select-option>
           </ion-select>
         </ion-item>
-  
-        <ion-button expand="block" (click)="guardarPerfil()">
-          Guardar Perfil
-        </ion-button>
-  
-      </ion-card-content>
-    </ion-card>
+        <ion-button expand="block" (click)="guardarPerfil()">Guardar Perfil</ion-button>
+      </form>
 
-  </form>
-
-  <ion-card *ngIf="perfilExiste">
-    <ion-card-header>
-      <ion-card-title>Información Personal</ion-card-title>
-    </ion-card-header>
-  
-    <ion-card-content>
-  
-      <p><strong>Edad:</strong> {{ perfilForm.edad }}</p>
-      <p><strong>Peso:</strong> {{ perfilForm.peso }} kg</p>
-      <p><strong>Altura:</strong> {{ perfilForm.altura }} cm</p>
-      <p><strong>Sexo:</strong> {{ perfilForm.sexo | titlecase }}</p>
-      <p><strong>Actividad Física:</strong> {{ perfilForm.actividad | titlecase }}</p>
-  
+      <div *ngIf="perfilExiste">
+        <p><strong>Edad:</strong> {{ perfilForm.edad }}</p>
+        <p><strong>Peso:</strong> {{ perfilForm.peso }} kg</p>
+        <p><strong>Altura:</strong> {{ perfilForm.altura }} cm</p>
+        <p><strong>Sexo:</strong> {{ perfilForm.sexo | titlecase }}</p>
+        <p><strong>Actividad Física:</strong> {{ perfilForm.actividad | titlecase }}</p>
+      </div>
     </ion-card-content>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Metabolismo y Calorías</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p><strong>Metabolismo Basal:</strong> {{ metabolismoBasal | number:'1.0-0' }} kcal</p>
-        <p><strong>Calorías Requeridas Diarias:</strong> {{ caloriasRequeridas | number:'1.0-0' }} kcal</p>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Calorías Finales Ajustadas</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p><strong>Calorías según Objetivo:</strong> {{ caloriasFinales | number:'1.0-0' }} kcal</p>
-      </ion-card-content>
-    </ion-card>
   </ion-card>
 
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Metabolismo y Calorías</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Metabolismo Basal:</strong> {{ metabolismoBasal | number:'1.0-0' }} kcal</p>
+      <p><strong>Calorías Requeridas Diarias:</strong> {{ caloriasRequeridas | number:'1.0-0' }} kcal</p>
+    </ion-card-content>
+  </ion-card>
 
-  
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Calorías Finales Ajustadas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Calorías según Objetivo:</strong> {{ caloriasFinales | number:'1.0-0' }} kcal</p>
+    </ion-card-content>
+  </ion-card>
 
   <!-- OBJETIVOS DEL USUARIO -->
 
-  <ion-card *ngIf="objetivosUsuario.length > 0">
+  <ion-card>
     <ion-card-header>
       <ion-card-title>Mis Objetivos</ion-card-title>
     </ion-card-header>
-  
     <ion-card-content>
       <ion-list>
         <ion-item *ngFor="let obj of objetivosUsuario">
@@ -117,14 +94,11 @@
               <ion-icon name="trash-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
-        </ion-item>        
+        </ion-item>
       </ion-list>
-    </ion-card-content>
-  </ion-card>
-  
-  <ion-card *ngIf="objetivosUsuario.length === 0">
-    <ion-card-content>
-      <ion-text color="medium">No se encontraron objetivos asignados.</ion-text>
+      <div *ngIf="objetivosUsuario.length === 0">
+        <ion-text color="medium">No se encontraron objetivos asignados.</ion-text>
+      </div>
     </ion-card-content>
   </ion-card>
 
@@ -133,14 +107,11 @@
       <ion-card-header>
         <ion-card-title>Objetivo Personal</ion-card-title>
       </ion-card-header>
-  
       <ion-card-content>
-  
         <ion-item>
           <ion-label position="floating">Peso Objetivo (kg)</ion-label>
           <ion-input type="number" [(ngModel)]="objetivoForm.peso_objetivo" name="peso_objetivo" required></ion-input>
         </ion-item>
-  
         <ion-item>
           <ion-label>Velocidad</ion-label>
           <ion-select [(ngModel)]="objetivoForm.velocidad" name="velocidad" interface="popover" required>
@@ -148,14 +119,10 @@
             <ion-select-option value="pausado">Pausado</ion-select-option>
           </ion-select>
         </ion-item>
-  
+        <ion-button expand="block" type="submit">Guardar Objetivo</ion-button>
       </ion-card-content>
-      <ion-button expand="block" type="submit">
-        Guardar Objetivo
-      </ion-button>
     </ion-card>
   </form>
-  
 
   <!-- MEDIDAS DEL USUARIO -->
 
@@ -163,31 +130,20 @@
     <ion-card-header>
       <ion-card-title>Mi Peso</ion-card-title>
     </ion-card-header>
-  
     <ion-card-content>
       <ion-list>
         <ion-item *ngFor="let medida of medidas">
           <ion-label>
             <h2>{{ medida.valor }} {{ medida.unidad_medida }} {{ medida.fecha }}</h2>
           </ion-label>
-          
           <ion-buttons slot="end">
-          <!--
-            <ion-button fill="clear" color="primary" (click)="editarMedida(medida)">
-              <ion-icon name="create-outline"></ion-icon>
-            </ion-button>
-          -->
             <ion-button fill="clear" color="danger" (click)="eliminarMedida(medida.id)">
               <ion-icon name="trash-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
-        </ion-item>        
+        </ion-item>
       </ion-list>
-
-      <ion-button expand="full" id="open-modal">
-        Agregar Medida
-      </ion-button>
-
+      <ion-button expand="full" id="open-modal">Agregar Medida</ion-button>
       <ion-modal #modal trigger="open-modal">
         <ng-template #modalContent>
           <ion-header>
@@ -200,103 +156,17 @@
               </ion-buttons>
             </ion-toolbar>
           </ion-header>
-
           <ion-content class="ion-padding">
             <ion-item>
               <ion-label position="floating">Valor</ion-label>
               <ion-input [(ngModel)]="nuevoValor" type="number" placeholder="Ingrese el valor"></ion-input>
             </ion-item>
-
-            <ion-button expand="block" (click)="guardarMedidaPorNombre('peso', {valor: nuevoValor}); modal.dismiss()">
-              Guardar Medida
-            </ion-button>
+            <ion-button expand="block" (click)="guardarMedidaPorNombre('peso', {valor: nuevoValor}); modal.dismiss()">Guardar Medida</ion-button>
           </ion-content>
         </ng-template>
       </ion-modal>
     </ion-card-content>
   </ion-card>
 
-<!-- 
-
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Medidas</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-      <ion-list>
-        <ion-item-group *ngFor="let group of medidas">
-          <ion-item-divider color="primary">
-            <ion-label>
-              <h2>ID: {{ group[0].id }}</h2>
-            </ion-label>
-            <ion-buttons slot="end">
-              <ion-button fill="clear" color="success" (click)="guardarMedidaPorNombre(group[0].nombre_medida, group[0])">
-                <ion-icon name="add-outline"></ion-icon> Añadir Medida
-              </ion-button>
-            </ion-buttons>
-          </ion-item-divider>
-
-          <ion-item>
-            <ion-label position="stacked">Valor</ion-label>
-            <ion-input [(ngModel)]="nuevoValor" type="number" placeholder="Ingrese el valor"></ion-input>
-          </ion-item>
-        
-          <ion-item *ngFor="let medida of group">
-            <ion-label>
-              <h2>{{ medida.nombre_medida | titlecase }}: {{ medida.valor }} {{ medida.unidad_medida }} {{ medida.fecha | date: 'dd/MM/yyyy' }}</h2>
-            </ion-label>
-            <ion-buttons slot="end">
-              <ion-button fill="clear" color="primary" (click)="editarMedida(medida)">
-                <ion-icon name="create-outline"></ion-icon>
-              </ion-button>
-              <ion-button fill="clear" color="danger" (click)="eliminarMedida(medida.id)">
-                <ion-icon name="trash-outline"></ion-icon>
-              </ion-button>
-            </ion-buttons>
-          </ion-item>
-        </ion-item-group>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
-
-  <form (ngSubmit)="guardarMedida()">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Ingresar medida</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-
-        <ion-item>
-          <ion-label>Tipo</ion-label>
-          <ion-select [(ngModel)]="medidaForm.nombre_medida" name="tipo" interface="popover" required>
-            <ion-select-option value="peso">Peso</ion-select-option>
-            <ion-select-option value="altura">Altura</ion-select-option>
-            <ion-select-option value="cintura">Cintura</ion-select-option>
-          </ion-select>
-        </ion-item>        
-
-        <ion-item>
-          <ion-label position="floating">Valor</ion-label>
-          <ion-input type="number" [(ngModel)]="medidaForm.valor" name="valor" required></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Unidad</ion-label>
-          <ion-select [(ngModel)]="medidaForm.unidad_medida" name="unidad" interface="popover" required>
-            <ion-select-option value="kg">Kg</ion-select-option>
-            <ion-select-option value="cm">Cm</ion-select-option>
-          </ion-select>
-        </ion-item>
-
-      </ion-card-content>
-    </ion-card>
-
-    <ion-button expand="full" type="submit">
-      Guardar Medida
-    </ion-button>
-  </form>
--->
-
 </ion-content>
+

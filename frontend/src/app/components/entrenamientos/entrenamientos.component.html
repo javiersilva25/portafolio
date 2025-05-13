@@ -1,6 +1,6 @@
-<ion-header collapse="condense">
+<ion-header>
   <ion-toolbar>
-    <ion-title size="large">Crear Rutina</ion-title>
+    <ion-title>Crear Rutina</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -76,8 +76,10 @@
     </ion-card-content>
   </ion-card>
 
-  <div class="ion-margin-top ion-text-center">
-    <ion-button expand="full" (click)="guardarRutina()">Guardar Rutina</ion-button>
-    <ion-button expand="full" (click)="goToHistorial()">Ver Historial</ion-button>
-  </div>
+  <ion-card class="ion-margin-top">
+    <ion-card-content>
+      <ion-button expand="block" (click)="guardarRutina()">Guardar Rutina</ion-button>
+      <ion-button expand="block" (click)="goToHistorial()">Ver Historial</ion-button>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
