@@ -83,18 +83,18 @@ def obtener_perfil(db: Session, usuario_id: int):
 
 
 
-def crear_medida(db: Session, usuario_id: int, medida: schemas.MedidaCreate):
-    db_medida = Medida(
-        fecha=medida.fecha,
-        nombre_medida=medida.nombre_medida,
-        unidad_medida=medida.unidad_medida,
-        valor=medida.valor,
-        usuario_id=usuario_id
-    )
-    db.add(db_medida)
-    db.commit()
-    db.refresh(db_medida)
-    return db_medida
+#def crear_medida(db: Session, usuario_id: int, medida: schemas.MedidaCreate):
+#    db_medida = Medida(
+#        fecha=medida.fecha,
+#        nombre_medida=medida.nombre_medida,
+#        unidad_medida=medida.unidad_medida,
+#        valor=medida.valor,
+#        usuario_id=usuario_id
+#    )
+#    db.add(db_medida)
+#    db.commit()
+#    db.refresh(db_medida)
+#    return db_medida
 
 def crear_medida_por_nombre(db: Session, usuario_id: int, nombre_medida: str, medida: schemas.MedidaCreate):
     db_medida = Medida(

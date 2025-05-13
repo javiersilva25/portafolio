@@ -1,0 +1,61 @@
+ion-content {
+    background-color: #f5f7fa;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #333;
+    --padding-bottom: 150px;
+  }
+  
+  /* Tarjetas principales */
+  ion-card {
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Títulos centrados y destacados */
+  ion-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  /* Inputs y selects */
+  ion-item {
+    --background: transparent;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+  }
+  
+  ion-input,
+  ion-select {
+    font-size: 12px;
+  }
+  
+  /* Botones */
+  ion-button {
+    --border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+  
+  /* Grupos de medidas */
+  ion-item-divider {
+    background-color: #e0f7fa;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Textos en labels */
+  h2 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  p {
+    font-size: 12px;
+    margin: 0.2rem 0;
+  }
+  

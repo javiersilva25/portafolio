@@ -102,13 +102,13 @@ def get_medidas(
 ):
     return crud.obtener_medidas(db, usuario.id)
 
-@router.post("/medidas", response_model=schemas.MedidaBase)
-def create_medida(
-    medida: schemas.MedidaCreate,
-    db: Session = Depends(get_db),
-    usuario: UsuarioToken = Depends(obtener_usuario_actual)
-):
-    return crud.crear_medida(db, usuario.id, medida)
+#@router.post("/medidas", response_model=schemas.MedidaBase)
+#def create_medida(
+#    medida: schemas.MedidaCreate,
+#    db: Session = Depends(get_db),
+#    usuario: UsuarioToken = Depends(obtener_usuario_actual)
+#):
+#    return crud.crear_medida(db, usuario.id, medida)
 
 @router.post("/medidas/nombre/{nombre_medida}", response_model=schemas.Medida)
 def create_medida_por_nombre(

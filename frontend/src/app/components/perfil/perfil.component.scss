@@ -58,3 +58,19 @@ p {
   font-size: 12px;
   margin: 0.2rem 0;
 }
+
+ion-modal {
+  --height: 20%;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal::part(backdrop) {
+  background: rgb(87, 87, 87);
+  opacity: 1;
+}
+
+ion-modal ion-toolbar {
+  --background: "primary";
+  --color: white;
+}

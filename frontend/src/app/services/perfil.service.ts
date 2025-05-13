@@ -65,9 +65,11 @@ export class PerfilService {
     return this.http.get<any[]>(`${this.apiUrl}/medidas`, this.getHeaders());
   }
 
+  /*
   postMedida(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/medidas`, data, this.getHeaders());
   }
+  */
 
   postMedidaPorNombre(nombre_medida: string, medida: any) {
     return this.http.post(`${this.apiUrl}/medidas/nombre/${nombre_medida}`, medida, this.getHeaders());

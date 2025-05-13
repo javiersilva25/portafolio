@@ -21,12 +21,12 @@ export class LoginPage {
       alert('Por favor completa todos los campos.');
       return;
     }
-
+    /*
     if (this.credentials.password.length < 8) {
       alert('La contraseña debe tener al menos 8 caracteres.');
       return;
     }
-
+    */
     this.userService.login(this.credentials).subscribe({
       next: (response) => {
         console.log('Login exitoso', response);

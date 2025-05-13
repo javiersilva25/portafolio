@@ -17,7 +17,7 @@
 
         <ion-item lines="none">
           <ion-label position="floating">Contraseña</ion-label>
-          <ion-input [(ngModel)]="credentials.password" name="password" type="password" required minlength="6" maxlength="6"></ion-input>
+          <ion-input [(ngModel)]="credentials.password" name="password" type="password"></ion-input>
         </ion-item>
         <ion-text color="danger" *ngIf="loginForm.submitted && (!credentials.password || credentials.password.length < 6)">
           <p class="validation-msg">La contraseña debe tener al menos 6 caracteres.</p>

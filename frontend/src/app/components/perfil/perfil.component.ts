@@ -25,6 +25,7 @@ export class PerfilComponent implements OnInit {
     sexo: '',
     actividad: ''
   };
+  perfilExiste = false;
 
   caloriasFinales: number = 0;
 
@@ -103,6 +104,7 @@ export class PerfilComponent implements OnInit {
   obtenerPerfil() {
     this.perfilService.getPerfil().subscribe({
       next: (data) => {
+        this.perfilExiste = true;
         this.perfilForm = data;
         this.perfilId = data.id;
         this.calcularMetabolismoBasal();
@@ -110,6 +112,7 @@ export class PerfilComponent implements OnInit {
         this.calcularCaloriasFinalesPorObjetivo();
       },
       error: (err) => {
+        this.perfilExiste = false;
         console.error('Error al obtener perfil', err);
       }
     });    
@@ -193,11 +196,13 @@ export class PerfilComponent implements OnInit {
     }
   }
 
+
   
   obtenerMedidas() {
     this.perfilService.getMedidas().subscribe({
       next: (data) => {
-        this.medidas = this.agruparMedidasPorNombre(data);
+        this.medidas = data;
+        // this.medidas = this.agruparMedidasPorNombre(data);
         console.log(this.medidas); // BORRAR
       },
       error: (err) => {
@@ -205,7 +210,8 @@ export class PerfilComponent implements OnInit {
       }
     });
   }
-  
+
+  /*
   guardarMedida() {
     if (this.medidaEditandoId !== null) {
       console.log(this.medidaEditandoId, this.medidaForm); // BORRAR
@@ -234,6 +240,22 @@ export class PerfilComponent implements OnInit {
     }
   }
 
+  agruparMedidasPorNombre(medidas: any[]): any[] {
+    const grupos: { [key: string]: any[] } = {};
+  
+    for (const medida of medidas) {
+      const nombre = medida.nombre_medida;
+      if (!grupos[nombre]) {
+        grupos[nombre] = [];
+      }
+      grupos[nombre].push(medida);
+    }
+
+    return Object.values(grupos);
+  }
+
+  */
+
   guardarMedidaPorNombre(nombre_medida: string, medida: any) {
     // Verificar si el valor fue ingresado
     if (this.nuevoValor === 0) {
@@ -243,7 +265,8 @@ export class PerfilComponent implements OnInit {
 
     // Preparar la medida con el nuevo valor
     const nuevaMedida = {
-      ...medida,
+      nombre_medida: 'peso',
+      unidad_medida: 'kg',
       valor: this.nuevoValor,  // Establecer el valor ingresado
       fecha: this.fechaHoy // o la fecha que elijas
     };
@@ -283,20 +306,6 @@ export class PerfilComponent implements OnInit {
         }
       });
     }
-  }
-
-  agruparMedidasPorNombre(medidas: any[]): any[] {
-    const grupos: { [key: string]: any[] } = {};
-  
-    for (const medida of medidas) {
-      const nombre = medida.nombre_medida;
-      if (!grupos[nombre]) {
-        grupos[nombre] = [];
-      }
-      grupos[nombre].push(medida);
-    }
-
-    return Object.values(grupos);
   }
 
   calcularMetabolismoBasal() {
