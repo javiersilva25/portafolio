@@ -9,6 +9,8 @@
     "@ionic/angular": "^8.5.5",
     "@ionic/angular-toolkit": "^12.2.0",
     "@ionic/core": "^8.5.7",
+    "echarts": "^5.6.0",
+    "ngx-echarts": "^19.0.0",
     "rxjs": "^7.8.2",
     "zone.js": "^0.15.0"
   },

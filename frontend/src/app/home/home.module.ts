@@ -9,6 +9,17 @@ import { EntrenamientosComponent } from '../components/entrenamientos/entrenamie
 import { NutricionComponent } from '../components/nutricion/nutricion.component';
 import { AlimentoModalComponent } from '../components/nutricion/alimento-modal/alimento-modal.component';
 import { PerfilComponent } from '../components/perfil/perfil.component';
+import { EstadisticasComponent } from '../components/perfil/estadisticas/estadisticas.component';
+
+import type { EChartsCoreOption } from 'echarts/core';
+import { NgxEchartsModule } from 'ngx-echarts';
+// import echarts core
+import * as echarts from 'echarts/core';
+// import necessary echarts components
+import { BarChart } from 'echarts/charts';
+import { GridComponent } from 'echarts/components';
+import { CanvasRenderer } from 'echarts/renderers';
+echarts.use([BarChart, GridComponent, CanvasRenderer]);
 
 
 @NgModule({
@@ -16,9 +27,10 @@ import { PerfilComponent } from '../components/perfil/perfil.component';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    NgxEchartsModule.forRoot({echarts})
   ],
-  declarations: [HomePage, EntrenamientosComponent, NutricionComponent, AlimentoModalComponent, PerfilComponent], 
+  declarations: [HomePage, EntrenamientosComponent, NutricionComponent, AlimentoModalComponent, PerfilComponent, EstadisticasComponent], 
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomePageModule {}

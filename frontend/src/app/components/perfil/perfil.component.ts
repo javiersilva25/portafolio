@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PerfilService } from '../../services/perfil.service';
+import { ModalController } from '@ionic/angular';
+import { EstadisticasComponent } from './estadisticas/estadisticas.component';
 
 @Component({
   selector: 'app-perfil',
@@ -49,7 +51,16 @@ export class PerfilComponent implements OnInit {
 
   perfilId: number | null = null;
 
-  constructor(private perfilService: PerfilService) {}
+  constructor(private perfilService: PerfilService,
+    private modalController: ModalController
+  ) {}
+
+  async abrirModal() {
+    const modal = await this.modalController.create({
+      component: EstadisticasComponent
+    });
+    await modal.present();
+  }
 
   ngOnInit() {
     this.obtenerPerfil();
