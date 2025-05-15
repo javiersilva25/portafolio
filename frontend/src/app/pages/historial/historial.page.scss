@@ -35,4 +35,13 @@ ion-card {
 ion-content {
   --padding-bottom: 60px;
 }
+  ion-button {
+  --border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  --background: var(--ion-color-primary);
+  --color: white;
+}
+
+
   

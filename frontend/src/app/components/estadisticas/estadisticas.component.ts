@@ -5,7 +5,6 @@ import { TooltipComponent, LegendComponent } from 'echarts/components'; // Impor
 import { PerfilService } from 'src/app/services/perfil.service';
 import { LineChart } from 'echarts/charts';
 
-// Register the components with ECharts
 import * as echarts from 'echarts/core';
 echarts.use([TooltipComponent, LegendComponent, LineChart]); // Register Tooltip and Legend components
 
@@ -20,7 +19,7 @@ export class EstadisticasComponent implements OnInit {
   medidas: any[] = [];
   fechas: string[] = [];
   valores: number[] = [];
-  colores = ['#36802d', '#33FF57', '#3357FF', '#FF33A1', '#FF8C33'];
+  colores = ['#36802d'];
 
   constructor(private modalController: ModalController, private perfilService: PerfilService) { }
 
