@@ -13,9 +13,7 @@ import { EstadisticasComponent } from '../components/perfil/estadisticas/estadis
 
 import type { EChartsCoreOption } from 'echarts/core';
 import { NgxEchartsModule } from 'ngx-echarts';
-// import echarts core
 import * as echarts from 'echarts/core';
-// import necessary echarts components
 import { BarChart } from 'echarts/charts';
 import { GridComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';

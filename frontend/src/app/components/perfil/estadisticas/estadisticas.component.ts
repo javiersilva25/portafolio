@@ -1,5 +1,7 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import type { EChartsCoreOption } from 'echarts/core';
+import { TooltipComponent, LegendComponent } from 'echarts/components';
 
 @Component({
   selector: 'app-estadisticas',
@@ -10,7 +12,7 @@ import type { EChartsCoreOption } from 'echarts/core';
 export class EstadisticasComponent  implements OnInit {
   options: EChartsCoreOption = {};
 
-  constructor() { }
+  constructor(private modalController: ModalController) { }
 
   ngOnInit(): void {
     const xAxisData = [];
@@ -52,5 +54,9 @@ export class EstadisticasComponent  implements OnInit {
       animationEasing: 'elasticOut',
       animationDelayUpdate: idx => idx * 5,
     };
+  }
+
+  cancelar() {
+    this.modalController.dismiss(null);
   }
 }
