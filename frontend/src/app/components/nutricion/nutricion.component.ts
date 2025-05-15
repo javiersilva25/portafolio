@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { NutricionService } from 'src/app/services/nutricion.service';
 import { ModalController, ToastController } from '@ionic/angular';
 import { AlimentoModalComponent } from './alimento-modal/alimento-modal.component';
+import { PerfilComponent } from '../perfil/perfil.component';
 
 type TipoComida = 'desayuno' | 'almuerzo' | 'cena';
 
@@ -23,6 +24,8 @@ interface AlimentoSeleccionado {
 })
 export class NutricionComponent implements OnInit {
 
+  @ViewChild('perfilRef') perfilComponent!: PerfilComponent;
+
   fechaHoy: string = new Date().toISOString().split('T')[0];
   tiposComida: TipoComida[] = ['desayuno', 'almuerzo', 'cena'];
 
@@ -36,6 +39,15 @@ export class NutricionComponent implements OnInit {
   totalCarbohidratos = 0;
   totalProteinas = 0;
   totalGrasas = 0;
+
+  caloriasFinales = 0;
+
+  ngAfterViewInit(): void {
+  setTimeout(() => {
+    this.perfilComponent.calcularCaloriasFinalesPorObjetivo();
+    this.caloriasFinales = this.perfilComponent.caloriasFinales;
+  });
+}
   
 
   constructor(

@@ -1,3 +1,4 @@
+<app-perfil #perfilRef style="display: none"></app-perfil>
 <ion-header>
   <ion-toolbar>
     <ion-title>Registro Nutricional Diario</ion-title>
@@ -33,7 +34,7 @@
     <ion-grid>
       <ion-row>
         <ion-col size="12" class="calorias-total">
-          <strong>Calorías:</strong> {{ totalCalorias | number:'1.0-0' }} kcal
+          <strong>Calorías:</strong> {{ totalCalorias | number:'1.0-0' }} kcal / {{ caloriasFinales | number:'1.0-0' }} kcal
         </ion-col>
       </ion-row>
       <ion-row>
