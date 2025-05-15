@@ -6,30 +6,51 @@
 
 <ion-content class="ion-padding">
 
-<ion-card>
-  <ion-card-title>Seleccionar Fecha</ion-card-title>
-  <ion-item>
-    <ion-input 
-      type="date"
-      [(ngModel)]="fechaHoy"
-      (ionChange)="cargarComidasPorFecha()">
-    </ion-input>
-  </ion-item>
+<ion-card class="fecha-selector-card">
+  <ion-card-header>
+    <ion-card-title>Seleccionar Fecha</ion-card-title>
+  </ion-card-header>
+  <ion-card-content class="fecha-selector">
+    <ion-button fill="clear" (click)="cambiarFecha(-1)">
+      <ion-icon name="chevron-back-outline"></ion-icon>
+    </ion-button>
+
+    <span class="fecha-texto">{{ fechaHoy | date:'shortDate' }}</span>
+
+    <ion-button fill="clear" (click)="cambiarFecha(1)">
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </ion-button>
+  </ion-card-content>
 </ion-card>
 
-  
 
-  <ion-card color="primary">
-    <ion-card-header>
-      <ion-card-title>Total del día</ion-card-title>
-      <ion-card-subtitle>
-        Calorías: {{ totalCalorias | number:'1.0-0' }} kcal |
-        C: {{ totalCarbohidratos | number:'1.0-1' }}g |
-        P: {{ totalProteinas | number:'1.0-1' }}g |
-        G: {{ totalGrasas | number:'1.0-1' }}g
-      </ion-card-subtitle>
-    </ion-card-header>
-  </ion-card>
+
+<ion-card class="resumen-total-card">
+  <ion-card-header>
+    <ion-card-title>Resumen Nutricional del Día</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" class="calorias-total">
+          <strong>Calorías:</strong> {{ totalCalorias | number:'1.0-0' }} kcal
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="4">
+          <strong>C:</strong> {{ totalCarbohidratos | number:'1.0-1' }} g
+        </ion-col>
+        <ion-col size="4">
+          <strong>P:</strong> {{ totalProteinas | number:'1.0-1' }} g
+        </ion-col>
+        <ion-col size="4">
+          <strong>G:</strong> {{ totalGrasas | number:'1.0-1' }} g
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+</ion-card>
+
 
   <div *ngFor="let tipo of tiposComida">
     <ion-card>

@@ -83,6 +83,13 @@ export class NutricionComponent implements OnInit {
     });
   }
 
+    cambiarFecha(dias: number) {
+      const nuevaFecha = new Date(this.fechaHoy);
+      nuevaFecha.setDate(nuevaFecha.getDate() + dias);
+      this.fechaHoy = nuevaFecha.toISOString().split('T')[0];
+      this.cargarComidasPorFecha();
+  }
+
   guardarDia() {
   const fecha = this.fechaHoy;
 

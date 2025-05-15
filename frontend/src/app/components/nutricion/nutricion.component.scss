@@ -80,3 +80,21 @@ ion-content {
     margin: 0.2rem 0;
   }
   
+  .fecha-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 16px;
+  text-align: center;
+}
+
+.fecha-texto {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 16px;
+}
+
+ion-icon {
+  font-size: 20px;
+}
