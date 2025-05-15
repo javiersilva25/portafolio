@@ -19,18 +19,15 @@ export class RegisterPage {
 
   onSubmit() {
   if (!this.user.username || !this.user.email || !this.user.password) {
-    alert('Por favor completa todos los campos.');
     return;
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(this.user.email)) {
-    alert('Ingresa un correo electrónico válido.');
     return;
   }
 
   if (this.user.password.length < 8) {
-    alert('La contraseña debe tener al menos 8 caracteres.');
     return;
   }
 

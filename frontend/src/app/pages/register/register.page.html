@@ -25,10 +25,10 @@
 
         <ion-item lines="none">
           <ion-label position="floating">Contraseña</ion-label>
-          <ion-input [(ngModel)]="user.password" name="password" type="password" required minlength="6" maxlength="6"></ion-input>
+          <ion-input [(ngModel)]="user.password" name="password" type="password" required minlength="8" maxlength="8"></ion-input>
         </ion-item>
-        <ion-text color="danger" *ngIf="registerForm.submitted && (!user.password || user.password.length < 6)">
-          <p class="validation-msg">La contraseña debe tener al menos 6 caracteres.</p>
+        <ion-text color="danger" *ngIf="registerForm.submitted && (!user.password || user.password.length < 8)">
+          <p class="validation-msg">La contraseña debe tener al menos 8 caracteres.</p>
         </ion-text>
 
         <ion-button expand="block" type="submit" class="ion-margin-top">Registrarse</ion-button>
