@@ -85,7 +85,6 @@ export class EntrenamientosComponent {
     });
   }
   
-  
   goToHistorial() {
     this.navCtrl.navigateRoot('/historial');
   }

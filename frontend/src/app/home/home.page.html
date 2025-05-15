@@ -19,11 +19,15 @@
     <ion-segment-button value="perfil">
       <ion-icon name="person"></ion-icon>
     </ion-segment-button>
+    <ion-segment-button value="estadisticas">
+      <ion-icon name="stats-chart"></ion-icon>
+    </ion-segment-button>
   </ion-segment>
 
   <ng-container [ngSwitch]="segment">
     <app-entrenamientos *ngSwitchCase="'entrenamientos'"></app-entrenamientos>
     <app-nutricion *ngSwitchCase="'nutricion'"></app-nutricion>
     <app-perfil *ngSwitchCase="'perfil'"></app-perfil>
+    <app-estadisticas *ngSwitchCase="'estadisticas'"></app-estadisticas>
   </ng-container>
 </ion-content>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PerfilService } from '../../services/perfil.service';
 import { ModalController } from '@ionic/angular';
-import { EstadisticasComponent } from './estadisticas/estadisticas.component';
+import { EstadisticasComponent } from '../estadisticas/estadisticas.component';
 
 @Component({
   selector: 'app-perfil',

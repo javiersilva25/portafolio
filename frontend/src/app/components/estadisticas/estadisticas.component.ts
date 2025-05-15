@@ -20,6 +20,7 @@ export class EstadisticasComponent implements OnInit {
   medidas: any[] = [];
   fechas: string[] = [];
   valores: number[] = [];
+  colores = ['#36802d', '#33FF57', '#3357FF', '#FF33A1', '#FF8C33'];
 
   constructor(private modalController: ModalController, private perfilService: PerfilService) { }
 
@@ -32,12 +33,10 @@ export class EstadisticasComponent implements OnInit {
           this.valores.push(medida.valor);
         });
 
-        // Console logs for debugging (remove in production)
         console.log(this.medidas); // BORRAR
         console.log(this.fechas); // BORRAR
         console.log(this.valores); // BORRAR
 
-        // Now, create the chart options
         const xAxisData = this.fechas;
         const data1 = this.valores;
 
@@ -53,8 +52,8 @@ export class EstadisticasComponent implements OnInit {
               alignWithLabel: true
             },
             axisLabel: {
-              rotate: -45,  // Rotates labels to make them vertical (sideways)
-              interval: 0  // Ensures that all labels are rotated (optional)
+              rotate: -45,
+              interval: 0
             }
           },
           yAxis: [{
@@ -70,6 +69,7 @@ export class EstadisticasComponent implements OnInit {
           ],
           animationEasing: 'elasticOut',
           animationDelayUpdate: idx => idx * 5,
+          color: this.colores[0]
         };
       },
       error: (err) => {

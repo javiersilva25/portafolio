@@ -9,7 +9,7 @@ import { EntrenamientosComponent } from '../components/entrenamientos/entrenamie
 import { NutricionComponent } from '../components/nutricion/nutricion.component';
 import { AlimentoModalComponent } from '../components/nutricion/alimento-modal/alimento-modal.component';
 import { PerfilComponent } from '../components/perfil/perfil.component';
-import { EstadisticasComponent } from '../components/perfil/estadisticas/estadisticas.component';
+import { EstadisticasComponent } from '../components/estadisticas/estadisticas.component';
 
 import type { EChartsCoreOption } from 'echarts/core';
 import { NgxEchartsModule } from 'ngx-echarts';

@@ -50,6 +50,8 @@ export class HistorialPage implements OnInit {
   }
 }
 
+  
+
   volverAlHome() {
     this.navCtrl.navigateRoot('/home');
   }
