@@ -6,17 +6,17 @@
 
 <ion-content class="ion-padding">
 
-  <ion-card>
-      <ion-label>Seleccionar fecha</ion-label>
-      <ion-datetime
-        [(ngModel)]="fechaHoy"
-        (ionChange)="cargarComidasPorFecha()"
-        presentation="date"
-        [preferWheel]="true"
-        size="cover"
-        >
-      </ion-datetime>
-  </ion-card>
+<ion-card>
+  <ion-card-title>Seleccionar Fecha</ion-card-title>
+  <ion-item>
+    <ion-input 
+      type="date"
+      [(ngModel)]="fechaHoy"
+      (ionChange)="cargarComidasPorFecha()">
+    </ion-input>
+  </ion-item>
+</ion-card>
+
   
 
   <ion-card color="primary">
@@ -51,14 +51,12 @@
                 </p>
               </ion-label>
             </ion-item>
-            <ion-item-options side="end">
               <ion-item-option color="primary" (click)="editarAlimento(tipo, i)">
                 <ion-icon name="create-outline"></ion-icon>
               </ion-item-option>
               <ion-item-option color="danger" (click)="eliminarAlimento(tipo, i)">
                 <ion-icon name="trash-outline"></ion-icon>
-              </ion-item-option>
-            </ion-item-options>            
+              </ion-item-option>           
           </ion-item-sliding>
         </ion-list>
       </ng-container>

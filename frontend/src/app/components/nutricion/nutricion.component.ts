@@ -36,6 +36,7 @@ export class NutricionComponent implements OnInit {
   totalCarbohidratos = 0;
   totalProteinas = 0;
   totalGrasas = 0;
+  
 
   constructor(
     private nutricionService: NutricionService,
@@ -52,6 +53,8 @@ export class NutricionComponent implements OnInit {
       component: AlimentoModalComponent,
       componentProps: { tipo }
     });
+
+    
 
     modal.onDidDismiss().then((data) => {
       if (data.data) {
@@ -81,53 +84,56 @@ export class NutricionComponent implements OnInit {
   }
 
   guardarDia() {
-    const fecha = this.fechaHoy;
-  
-    this.tiposComida.forEach(tipo => {
-      if (this.comidas[tipo].length > 0) {
-        this.nutricionService.deleteComidaPorFechaYTipo(fecha, tipo).subscribe({
-          next: () => {
-            this.nutricionService.postComida({
-              tipo,
-              fecha,
-              registros: this.comidas[tipo].map((a) => ({
-                gramos: a.gramos,
-                alimento_id: a.id
-              }))
-            }).subscribe({
-              next: () => {
-                this.mostrarToast(`Comida ${tipo} guardada automáticamente`);
-              },
-              error: (err) => {
-                this.mostrarToast(`Error al guardar comida ${tipo}`, 'danger');
-                console.error(err);
-              }
-            });
-          },
-          error: (err) => {
-            console.warn(`No se pudo eliminar comida ${tipo} (puede no existir):`, err);
-  
-            this.nutricionService.postComida({
-              tipo,
-              fecha,
-              registros: this.comidas[tipo].map((a) => ({
-                gramos: a.gramos,
-                alimento_id: a.id
-              }))
-            }).subscribe({
-              next: () => {
-                this.mostrarToast(`Comida ${tipo} guardada automáticamente`);
-              },
-              error: (err) => {
-                this.mostrarToast(`Error al guardar comida ${tipo}`, 'danger');
-                console.error(err);
-              }
-            });
-          }
-        });
+  const fecha = this.fechaHoy;
+
+  this.tiposComida.forEach(tipo => {
+    const tieneComidas = this.comidas[tipo].length > 0;
+
+    this.nutricionService.deleteComidaPorFechaYTipo(fecha, tipo).subscribe({
+      next: () => {
+        if (tieneComidas) {
+          this.nutricionService.postComida({
+            tipo,
+            fecha,
+            registros: this.comidas[tipo].map((a) => ({
+              gramos: a.gramos,
+              alimento_id: a.id
+            }))
+          }).subscribe({
+            next: () => this.mostrarToast(`Comida ${tipo} actualizada`),
+            error: (err) => {
+              this.mostrarToast(`Error al guardar comida ${tipo}`, 'danger');
+              console.error(err);
+            }
+          });
+        } else {
+          this.mostrarToast(`Comida ${tipo} eliminada`);
+        }
+      },
+      error: (err) => {
+        console.warn(`No se pudo eliminar comida ${tipo}:`, err);
+
+        if (tieneComidas) {
+          this.nutricionService.postComida({
+            tipo,
+            fecha,
+            registros: this.comidas[tipo].map((a) => ({
+              gramos: a.gramos,
+              alimento_id: a.id
+            }))
+          }).subscribe({
+            next: () => this.mostrarToast(`Comida ${tipo} guardada automáticamente`),
+            error: (err) => {
+              this.mostrarToast(`Error al guardar comida ${tipo}`, 'danger');
+              console.error(err);
+            }
+          });
+        }
       }
     });
-  }  
+  });
+}
+
 
   cargarComidasPorFecha() {
     this.comidas = {
@@ -160,6 +166,7 @@ export class NutricionComponent implements OnInit {
   }
 
   eliminarAlimento(tipo: TipoComida, index: number) {
+    console.log('Eliminando alimento:', tipo, index);
     this.comidas[tipo].splice(index, 1);
     this.calcularTotales();
     this.guardarDia();

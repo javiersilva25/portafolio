@@ -39,10 +39,14 @@ def get_comidas_by_usuario_and_fecha(db: Session, usuario_id: int, fecha: date):
     return db.query(models.Comida).filter_by(usuario_id=usuario_id, fecha=fecha).all()
 
 def delete_comida_por_tipo_y_fecha(db: Session, usuario_id: int, fecha: date, tipo: str):
+    print(f"[DEBUG] Buscando comida para usuario {usuario_id}, fecha {fecha}, tipo {tipo}")
     comida = db.query(models.Comida).filter_by(usuario_id=usuario_id, fecha=fecha, tipo=tipo).first()
     if comida:
+        print("[DEBUG] Comida encontrada, eliminando...")
         db.delete(comida)
         db.commit()
         return True
+    print("[DEBUG] No se encontró la comida")
     return False
+
 
