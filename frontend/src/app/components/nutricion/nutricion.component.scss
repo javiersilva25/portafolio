@@ -76,7 +76,7 @@ ion-content {
   }
   
   p {
-    font-size: 12px;
+    font-size: 11px;
     margin: 0.2rem 0;
   }
   
@@ -96,5 +96,12 @@ ion-content {
 }
 
 ion-icon {
-  font-size: 20px;
+  font-size: 12px;
 }
+
+.macro-row {
+  margin-bottom: 1rem;
+  font-size: 12px;
+  text-align: center;
+}
+

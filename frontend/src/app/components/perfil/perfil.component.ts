@@ -51,6 +51,12 @@ export class PerfilComponent implements OnInit {
 
   perfilId: number | null = null;
 
+  macros = {
+    carbohidratos: 0,
+    proteinas: 0,
+    grasas: 0
+  };
+
   constructor(private perfilService: PerfilService,
     private modalController: ModalController
   ) {}
@@ -70,6 +76,7 @@ export class PerfilComponent implements OnInit {
     this.calcularMetabolismoBasal();
     this.calcularCaloriasRequeridas();
     this.calcularCaloriasFinalesPorObjetivo();
+    this.calcularMacronutrientes();
 
   }
 
@@ -375,6 +382,35 @@ export class PerfilComponent implements OnInit {
   
     this.caloriasFinales = this.caloriasRequeridas + ajuste;
   }
-  
 
+  calcularMacronutrientes() {
+  const calorias = this.caloriasFinales;
+  const actividad = this.perfilForm.actividad;
+
+  let porcentajeCarbs = 0.5;
+  let porcentajeProteinas = 0.25;
+  let porcentajeGrasas = 0.25;
+
+  switch (actividad) {
+    case 'Poco':
+      porcentajeCarbs = 0.45;
+      porcentajeProteinas = 0.25;
+      porcentajeGrasas = 0.30;
+      break;
+    case 'Moderado':
+      porcentajeCarbs = 0.50;
+      porcentajeProteinas = 0.25;
+      porcentajeGrasas = 0.25;
+      break;
+    case 'Mucho':
+      porcentajeCarbs = 0.55;
+      porcentajeProteinas = 0.25;
+      porcentajeGrasas = 0.20;
+      break;
+  }
+
+  this.macros.carbohidratos = +(calorias * porcentajeCarbs / 4).toFixed(1);
+  this.macros.proteinas = +(calorias * porcentajeProteinas / 4).toFixed(1);
+  this.macros.grasas = +(calorias * porcentajeGrasas / 9).toFixed(1);
+}
 }

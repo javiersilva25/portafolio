@@ -40,12 +40,20 @@ export class NutricionComponent implements OnInit {
   totalProteinas = 0;
   totalGrasas = 0;
 
+  carbohidratosObjetivos = 0;
+  proteinasObjetivos = 0;
+  grasasObjetivos = 0;
+
   caloriasFinales = 0;
 
   ngAfterViewInit(): void {
   setTimeout(() => {
     this.perfilComponent.calcularCaloriasFinalesPorObjetivo();
     this.caloriasFinales = this.perfilComponent.caloriasFinales;
+    this.perfilComponent.calcularMacronutrientes();
+    this.carbohidratosObjetivos = this.perfilComponent.macros.carbohidratos;
+    this.proteinasObjetivos = this.perfilComponent.macros.proteinas;
+    this.grasasObjetivos = this.perfilComponent.macros.grasas;
   });
 }
   
@@ -195,7 +203,7 @@ export class NutricionComponent implements OnInit {
     return this.tiposComida.some(tipo => this.comidas[tipo].length > 0);
   }
 
-  async mostrarToast(mensaje: string, color: string = 'success') {
+  async mostrarToast(mensaje: string, color: string = 'green') {
     const toast = await this.toastController.create({
       message: mensaje,
       duration: 2000,
