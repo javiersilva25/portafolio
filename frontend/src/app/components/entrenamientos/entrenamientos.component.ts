@@ -30,12 +30,33 @@ export class EntrenamientosComponent {
               
 
   agregarEjercicio() {
-    if (!this.ejercicioActual.nombre_ejercicio) {
-      return;
-    }
-    this.rutina.ejercicios.push({ ...this.ejercicioActual });
-    this.ejercicioActual = { nombre_ejercicio: '', series: 0, repeticiones: 0, peso: 0 };
+  const { nombre_ejercicio, series, repeticiones, peso } = this.ejercicioActual;
+
+  if (!nombre_ejercicio || series == null || repeticiones == null || peso == null) {
+    this.mostrarToast('Completa todos los campos del ejercicio', 'danger');
+    return;
   }
+
+  if (series < 0 || repeticiones < 0 || peso < 0) {
+    this.mostrarToast('Los valores no pueden ser negativos', 'danger');
+    return;
+  }
+
+  this.rutina.ejercicios.push({ ...this.ejercicioActual });
+  this.ejercicioActual = { nombre_ejercicio: '', series: 0, repeticiones: 0, peso: 0 };
+  this.mostrarToast('Ejercicio agregado');
+}
+
+  async mostrarToast(mensaje: string, color: string = 'success') {
+  const toast = await this.toastController.create({
+    message: mensaje,
+    duration: 2000,
+    color,
+    position: 'bottom'
+  });
+  await toast.present();
+}
+
 
   editarEjercicio(index: number) {
     const ejercicio = this.rutina.ejercicios[index];

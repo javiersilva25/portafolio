@@ -70,38 +70,60 @@ export class AlimentoModalComponent implements OnInit {
     };
   }
 
-  guardar() {
-    if (this.gramos <= 0) return;
-  
-    if (this.crearNuevo) {
-      this.nutricionService.postAlimento(this.nuevoAlimento).subscribe((nuevo) => {
-        const factor = this.gramos / 100;
-        const alimentoProcesado = {
-          id: nuevo.id,
-          nombre: nuevo.nombre,
-          gramos: this.gramos,
-          calorias: nuevo.calorias * factor,
-          carbohidratos: nuevo.carbohidratos * factor,
-          proteinas: nuevo.proteinas * factor,
-          grasas: nuevo.grasas * factor
-        };
-        this.modalController.dismiss(alimentoProcesado);
-      });
-    } else if (this.alimentoSeleccionado) {
-      const a = this.alimentoSeleccionado;
+guardar() {
+  if (this.gramos == null || this.gramos <= 0) {
+    this.mostrarToast('Ingresa una cantidad válida en gramos', 'danger');
+    return;
+  }
+
+  if (this.crearNuevo) {
+    const { nombre, proteinas, carbohidratos, grasas, calorias } = this.nuevoAlimento;
+
+    if (!nombre || proteinas == null || carbohidratos == null || grasas == null || calorias == null) {
+      this.mostrarToast('Completa todos los campos del nuevo alimento', 'danger');
+      return;
+    }
+
+    if (proteinas < 0 || carbohidratos < 0 || grasas < 0 || calorias < 0) {
+      this.mostrarToast('Los valores no pueden ser negativos', 'danger');
+      return;
+    }
+
+    this.nutricionService.postAlimento(this.nuevoAlimento).subscribe((nuevo) => {
       const factor = this.gramos / 100;
       const alimentoProcesado = {
-        id: a.id,
-        nombre: a.nombre,
+        id: nuevo.id,
+        nombre: nuevo.nombre,
         gramos: this.gramos,
-        calorias: a.calorias * factor,
-        carbohidratos: a.carbohidratos * factor,
-        proteinas: a.proteinas * factor,
-        grasas: a.grasas * factor
+        calorias: nuevo.calorias * factor,
+        carbohidratos: nuevo.carbohidratos * factor,
+        proteinas: nuevo.proteinas * factor,
+        grasas: nuevo.grasas * factor
       };
       this.modalController.dismiss(alimentoProcesado);
+    });
+
+  } else {
+    if (!this.alimentoSeleccionado) {
+      this.mostrarToast('Selecciona un alimento', 'danger');
+      return;
     }
+
+    const a = this.alimentoSeleccionado;
+    const factor = this.gramos / 100;
+    const alimentoProcesado = {
+      id: a.id,
+      nombre: a.nombre,
+      gramos: this.gramos,
+      calorias: a.calorias * factor,
+      carbohidratos: a.carbohidratos * factor,
+      proteinas: a.proteinas * factor,
+      grasas: a.grasas * factor
+    };
+    this.modalController.dismiss(alimentoProcesado);
   }
+}
+
   
   calcularCalorias() {
     const p = this.nuevoAlimento.proteinas || 0;
@@ -112,5 +134,11 @@ export class AlimentoModalComponent implements OnInit {
 
   cancelar() {
     this.modalController.dismiss(null);
+  }
+
+  mostrarToast(mensaje: string, color: string = 'primary') {
+    // You can use Ionic's ToastController for a real implementation.
+    // For now, we'll just use alert as a placeholder.
+    alert(`${mensaje}`);
   }
 }

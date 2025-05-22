@@ -35,17 +35,17 @@
 
       <ion-item>
         <ion-label position="floating">Series</ion-label>
-        <ion-input type="number" [(ngModel)]="ejercicioActual.series"></ion-input>
+        <ion-input type="number" [(ngModel)]="ejercicioActual.series" min="0"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label position="floating">Repeticiones</ion-label>
-        <ion-input type="number" [(ngModel)]="ejercicioActual.repeticiones"></ion-input>
+        <ion-input type="number" [(ngModel)]="ejercicioActual.repeticiones" min="0"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label position="floating">Peso (kg)</ion-label>
-        <ion-input type="number" [(ngModel)]="ejercicioActual.peso"></ion-input>
+        <ion-input type="number" [(ngModel)]="ejercicioActual.peso" min="0"></ion-input>
       </ion-item>
 
       <ion-button expand="full" (click)="agregarEjercicio()">Agregar Ejercicio</ion-button>
