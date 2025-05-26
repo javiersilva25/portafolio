@@ -6,17 +6,17 @@ from app.models.medida import Medida
 from app.schemas import perfil as schemas
 from fastapi import HTTPException
 
-def crear_objetivo_usuario(db: Session, usuario_id: int, objetivo_usuario: schemas.ObjetivoUsuarioCreate):
-    db_objetivo_usuario = ObjetivoUsuario(
-        peso_objetivo=objetivo_usuario.peso_objetivo,
-        velocidad=objetivo_usuario.velocidad,
-        id_objetivo=objetivo_usuario.id_objetivo,
+def crear_objetivo_usuario(db: Session, usuario_id: int, data: schemas.ObjetivoUsuarioCreate):
+    nuevo = ObjetivoUsuario(
+        peso_objetivo=data.peso_objetivo,
+        velocidad=data.velocidad,
+        id_objetivo=data.id_objetivo,
         usuario_id=usuario_id
     )
-    db.add(db_objetivo_usuario)
+    db.add(nuevo)
     db.commit()
-    db.refresh(db_objetivo_usuario)
-    return db_objetivo_usuario
+    db.refresh(nuevo)
+    return db.query(ObjetivoUsuario).options(joinedload(ObjetivoUsuario.objetivo)).get(nuevo.id)
 
 
 def obtener_objetivos(db: Session):

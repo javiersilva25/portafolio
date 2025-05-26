@@ -29,13 +29,15 @@ def get_objetivo_usuario(
 def get_objetivos(db:Session = Depends(get_db)):
     return crud.obtener_objetivos(db)
 
-@router.post("/objetivos", response_model=schemas.ObjetivoUsuarioBase)
+@router.post("/objetivos", response_model=schemas.ObjetivoUsuario)
 def create_objetivo_usuario(
     objetivo_usuario: schemas.ObjetivoUsuarioCreate,
     db: Session = Depends(get_db),
     usuario: UsuarioToken = Depends(obtener_usuario_actual)
 ):
+    print("📥 Llegó petición con datos:", objetivo_usuario.dict())
     return crud.crear_objetivo_usuario(db, usuario.id, objetivo_usuario)
+
 
 @router.put("/objetivos/{objetivo_id}", response_model=schemas.ObjetivoUsuarioBase)
 def update_objetivo_usuario(

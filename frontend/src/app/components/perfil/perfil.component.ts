@@ -39,7 +39,7 @@ export class PerfilComponent implements OnInit {
   objetivoForm: any = {
     peso_objetivo: 0,
     velocidad: 'pausado',
-    id_objetivo: 1
+    id_objetivo: 5
   };  
 
   medidaForm: any = {

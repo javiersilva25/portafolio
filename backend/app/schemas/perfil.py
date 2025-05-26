@@ -4,7 +4,8 @@ from datetime import date
 
 
 from pydantic import BaseModel
-from typing import Literal
+from typing import Literal, Optional
+
 
 class ListaObjetivos(BaseModel):
     id: int
@@ -30,9 +31,13 @@ class ObjetivoUsuarioUpdate(ObjetivoUsuarioBase):
 
 class ObjetivoUsuario(ObjetivoUsuarioBase):
     id: int
+    usuario_id: int
+    objetivo: Optional[ListaObjetivos] = None
 
     class Config:
         from_attributes = True
+
+
 
 
 
