@@ -137,8 +137,6 @@ guardar() {
   }
 
   mostrarToast(mensaje: string, color: string = 'primary') {
-    // You can use Ionic's ToastController for a real implementation.
-    // For now, we'll just use alert as a placeholder.
     alert(`${mensaje}`);
   }
 }
