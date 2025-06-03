@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { NutricionService } from 'src/app/services/nutricion.service';
 
 @Component({
@@ -29,7 +29,8 @@ export class AlimentoModalComponent implements OnInit {
 
   constructor(
     private modalController: ModalController,
-    private nutricionService: NutricionService
+    private nutricionService: NutricionService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -56,7 +57,6 @@ export class AlimentoModalComponent implements OnInit {
     });
   }
   
-
   calcularMacros(alimento: any, gramos: number) {
     const factor = gramos / 100;
     return {
@@ -70,61 +70,60 @@ export class AlimentoModalComponent implements OnInit {
     };
   }
 
-guardar() {
-  if (this.gramos == null || this.gramos <= 0) {
-    this.mostrarToast('Ingresa una cantidad válida en gramos', 'danger');
-    return;
-  }
-
-  if (this.crearNuevo) {
-    const { nombre, proteinas, carbohidratos, grasas, calorias } = this.nuevoAlimento;
-
-    if (!nombre || proteinas == null || carbohidratos == null || grasas == null || calorias == null) {
-      this.mostrarToast('Completa todos los campos del nuevo alimento', 'danger');
+  guardar() {
+    if (this.gramos == null || this.gramos <= 0) {
+      this.mostrarToast('Ingresa una cantidad válida en gramos', 'danger');
       return;
     }
 
-    if (proteinas < 0 || carbohidratos < 0 || grasas < 0 || calorias < 0) {
-      this.mostrarToast('Los valores no pueden ser negativos', 'danger');
-      return;
-    }
+    if (this.crearNuevo) {
+      const { nombre, proteinas, carbohidratos, grasas, calorias } = this.nuevoAlimento;
 
-    this.nutricionService.postAlimento(this.nuevoAlimento).subscribe((nuevo) => {
+      if (!nombre || proteinas == null || carbohidratos == null || grasas == null || calorias == null) {
+        this.mostrarToast('Completa todos los campos del nuevo alimento', 'danger');
+        return;
+      }
+
+      if (proteinas < 0 || carbohidratos < 0 || grasas < 0 || calorias < 0) {
+        this.mostrarToast('Los valores no pueden ser negativos', 'danger');
+        return;
+      }
+
+      this.nutricionService.postAlimento(this.nuevoAlimento).subscribe((nuevo) => {
+        const factor = this.gramos / 100;
+        const alimentoProcesado = {
+          id: nuevo.id,
+          nombre: nuevo.nombre,
+          gramos: this.gramos,
+          calorias: nuevo.calorias * factor,
+          carbohidratos: nuevo.carbohidratos * factor,
+          proteinas: nuevo.proteinas * factor,
+          grasas: nuevo.grasas * factor
+        };
+        this.modalController.dismiss(alimentoProcesado);
+      });
+
+    } else {
+      if (!this.alimentoSeleccionado) {
+        this.mostrarToast('Selecciona un alimento', 'danger');
+        return;
+      }
+
+      const a = this.alimentoSeleccionado;
       const factor = this.gramos / 100;
       const alimentoProcesado = {
-        id: nuevo.id,
-        nombre: nuevo.nombre,
+        id: a.id,
+        nombre: a.nombre,
         gramos: this.gramos,
-        calorias: nuevo.calorias * factor,
-        carbohidratos: nuevo.carbohidratos * factor,
-        proteinas: nuevo.proteinas * factor,
-        grasas: nuevo.grasas * factor
+        calorias: a.calorias * factor,
+        carbohidratos: a.carbohidratos * factor,
+        proteinas: a.proteinas * factor,
+        grasas: a.grasas * factor
       };
       this.modalController.dismiss(alimentoProcesado);
-    });
-
-  } else {
-    if (!this.alimentoSeleccionado) {
-      this.mostrarToast('Selecciona un alimento', 'danger');
-      return;
     }
-
-    const a = this.alimentoSeleccionado;
-    const factor = this.gramos / 100;
-    const alimentoProcesado = {
-      id: a.id,
-      nombre: a.nombre,
-      gramos: this.gramos,
-      calorias: a.calorias * factor,
-      carbohidratos: a.carbohidratos * factor,
-      proteinas: a.proteinas * factor,
-      grasas: a.grasas * factor
-    };
-    this.modalController.dismiss(alimentoProcesado);
   }
-}
 
-  
   calcularCalorias() {
     const p = this.nuevoAlimento.proteinas || 0;
     const g = this.nuevoAlimento.grasas || 0;
@@ -136,7 +135,12 @@ guardar() {
     this.modalController.dismiss(null);
   }
 
-  mostrarToast(mensaje: string, color: string = 'primary') {
-    alert(`${mensaje}`);
+  async mostrarToast(mensaje: string, color: string = 'primary') {
+    const alert = await this.alertController.create({
+      header: color === 'danger' ? 'Error' : 'Aviso',
+      message: mensaje,
+      buttons: ['OK'],
+    });
+    await alert.present();
   }
 }

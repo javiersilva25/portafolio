@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PerfilService } from '../../services/perfil.service';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { EstadisticasComponent } from '../estadisticas/estadisticas.component';
 
 @Component({
@@ -11,14 +11,14 @@ import { EstadisticasComponent } from '../estadisticas/estadisticas.component';
 })
 export class PerfilComponent implements OnInit {
 
-  objetivos: any[]=[];
+  objetivos: any[] = [];
   objetivosUsuario: any[] = [];
   objetivoEditandoId: number | null = null;
 
   medidas: any[] = [];
   medidaEditandoId: number | null = null;
   fechaHoy: string = new Date().toISOString().slice(0, 10);
-  nuevoValor: number = 0; 
+  nuevoValor: number = 0;
 
   perfilForm: any = {
     edad: 0,
@@ -31,16 +31,14 @@ export class PerfilComponent implements OnInit {
 
   caloriasFinales: number = 0;
 
-
   metabolismoBasal: number = 0;
   caloriasRequeridas: number = 0;
-
 
   objetivoForm: any = {
     peso_objetivo: 0,
     velocidad: 'pausado',
     id_objetivo: 1
-  };  
+  };
 
   medidaForm: any = {
     fecha: this.fechaHoy,
@@ -57,9 +55,11 @@ export class PerfilComponent implements OnInit {
     grasas: 0
   };
 
-  constructor(private perfilService: PerfilService,
-    private modalController: ModalController
-  ) {}
+  constructor(
+    private perfilService: PerfilService,
+    private modalController: ModalController,
+    private alertController: AlertController
+  ) { }
 
   async abrirModal() {
     const modal = await this.modalController.create({
@@ -77,18 +77,17 @@ export class PerfilComponent implements OnInit {
     this.calcularCaloriasRequeridas();
     this.calcularCaloriasFinalesPorObjetivo();
     this.calcularMacronutrientes();
-
   }
 
   actualizarFecha(event: any) {
-    const valor = event.detail.value; 
-    this.perfilForm.fec_nac = valor?.slice(0, 10); 
+    const valor = event.detail.value;
+    this.perfilForm.fec_nac = valor?.slice(0, 10);
   }
 
   guardarPerfil() {
     this.calcularMetabolismoBasal();
     this.calcularCaloriasRequeridas();
-  
+
     if (this.perfilId !== null) {
       console.log("Perfil ID actual:", this.perfilId);
       console.log("📤 Enviando perfil:", this.perfilForm);
@@ -103,7 +102,7 @@ export class PerfilComponent implements OnInit {
     } else {
       console.log("Perfil ID actual:", this.perfilId);
       console.log("📤 Enviando perfil:", this.perfilForm);
-  
+
       this.perfilService.createPerfil(this.perfilForm).subscribe({
         next: (response) => {
           console.log('Perfil creado correctamente', response);
@@ -116,8 +115,6 @@ export class PerfilComponent implements OnInit {
       });
     }
   }
-  
-  
 
   obtenerPerfil() {
     this.perfilService.getPerfil().subscribe({
@@ -133,9 +130,9 @@ export class PerfilComponent implements OnInit {
         this.perfilExiste = false;
         console.error('Error al obtener perfil', err);
       }
-    });    
+    });
   }
-  
+
   guardarObjetivo() {
     if (this.objetivoEditandoId !== null) {
       this.perfilService.updateObjetivo(this.objetivoEditandoId, this.objetivoForm).subscribe({
@@ -162,16 +159,14 @@ export class PerfilComponent implements OnInit {
       });
     }
   }
-  
 
-  obtenerObjetivos(){
+  obtenerObjetivos() {
     this.perfilService.getObjetivos().subscribe((data) => {
       this.objetivos = data;
       console.log(this.objetivos); // BORRAR
-    })
-    
+    });
   }
-  
+
   obtenerObjetivosUsuario() {
     this.perfilService.getObjetivosUsuario().subscribe({
       next: (data) => {
@@ -188,7 +183,6 @@ export class PerfilComponent implements OnInit {
       }
     });
   }
-  
 
   editarObjetivo(obj: any) {
     this.objetivoForm = {
@@ -198,29 +192,39 @@ export class PerfilComponent implements OnInit {
     };
     this.objetivoEditandoId = obj.id;
   }
-  
-  
-  eliminarObjetivo(id: number) {
-    if (confirm('¿Estás seguro de que quieres eliminar este objetivo?')) {
-      this.perfilService.deleteObjetivo(id).subscribe({
-        next: () => {
-          console.log('Objetivo eliminado correctamente');
-          this.obtenerObjetivosUsuario();
+
+  async eliminarObjetivo(id: number) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar eliminación',
+      message: '¿Estás seguro de que quieres eliminar este objetivo?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
         },
-        error: (err) => {
-          console.error('Error al eliminar objetivo', err);
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.perfilService.deleteObjetivo(id).subscribe({
+              next: () => {
+                console.log('Objetivo eliminado correctamente');
+                this.obtenerObjetivosUsuario();
+              },
+              error: (err) => {
+                console.error('Error al eliminar objetivo', err);
+              }
+            });
+          }
         }
-      });
-    }
+      ]
+    });
+    await alert.present();
   }
 
-
-  
   obtenerMedidas() {
     this.perfilService.getMedidas().subscribe({
       next: (data) => {
         this.medidas = data;
-        // this.medidas = this.agruparMedidasPorNombre(data);
         console.log(this.medidas); // BORRAR
       },
       error: (err) => {
@@ -229,79 +233,31 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  /*
-  guardarMedida() {
-    if (this.medidaEditandoId !== null) {
-      console.log(this.medidaEditandoId, this.medidaForm); // BORRAR
-      this.perfilService.updateMedida(this.medidaEditandoId, this.medidaForm).subscribe({
-        next: () => {
-          console.log('Medida actualizada correctamente');
-          this.medidaEditandoId = null;
-          this.medidaForm = { fecha: this.fechaHoy, nombre_medida: '', unidad_medida: '', valor: 0 };
-          this.obtenerMedidas();
-        },
-        error: (err) => {
-          console.error('Error al actualizar medida', err);
-        }
-      })
-    } else {
-      this.perfilService.postMedida(this.medidaForm).subscribe({
-        next: () => {
-          console.log('Medida guardada correctamente');
-          this.medidaForm = { fecha: this.fechaHoy, nombre_medida: '', unidad_medida: '', valor: 0 };
-          this.obtenerMedidas();
-        },
-        error: (err) => {
-          console.error('Error al guardar medida', err);
-        }
-      })
-    }
-  }
-
-  agruparMedidasPorNombre(medidas: any[]): any[] {
-    const grupos: { [key: string]: any[] } = {};
-  
-    for (const medida of medidas) {
-      const nombre = medida.nombre_medida;
-      if (!grupos[nombre]) {
-        grupos[nombre] = [];
-      }
-      grupos[nombre].push(medida);
-    }
-
-    return Object.values(grupos);
-  }
-
-  */
-
   guardarMedidaPorNombre(nombre_medida: string, medida: any) {
-    // Verificar si el valor fue ingresado
     if (this.nuevoValor === 0) {
       console.error('Por favor ingresa un valor');
       return;
     }
 
-    // Preparar la medida con el nuevo valor
     const nuevaMedida = {
       nombre_medida: 'peso',
       unidad_medida: 'kg',
-      valor: this.nuevoValor,  // Establecer el valor ingresado
-      fecha: this.fechaHoy // o la fecha que elijas
+      valor: this.nuevoValor,
+      fecha: this.fechaHoy
     };
 
-    // Llamar al servicio para guardar la medida
     this.perfilService.postMedidaPorNombre(nombre_medida, nuevaMedida).subscribe({
       next: () => {
         console.log('Medida guardada correctamente');
         this.obtenerMedidas();
-        this.nuevoValor = 0; // Limpiar el campo de entrada después de guardar
+        this.nuevoValor = 0;
       },
       error: (err) => {
         console.error('Error al guardar medida', err);
       }
     });
   }
-  
+
   editarMedida(medida: any) {
     this.medidaForm = {
       fecha: medida.fecha,
@@ -311,19 +267,33 @@ export class PerfilComponent implements OnInit {
     };
     this.medidaEditandoId = medida.id;
   }
-  
-  eliminarMedida(id: number) {
-    if (confirm('¿Estás seguro de que quieres eliminar esta medida?')) {
-      this.perfilService.deleteMedida(id).subscribe({
-        next: () => {
-          console.log('Medida eliminada correctamente');
-          this.obtenerMedidas();
+
+  async eliminarMedida(id: number) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar eliminación',
+      message: '¿Estás seguro de que quieres eliminar esta medida?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
         },
-        error: (err) => {
-          console.error('Error al eliminar medida', err);
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.perfilService.deleteMedida(id).subscribe({
+              next: () => {
+                console.log('Medida eliminada correctamente');
+                this.obtenerMedidas();
+              },
+              error: (err) => {
+                console.error('Error al eliminar medida', err);
+              }
+            });
+          }
         }
-      });
-    }
+      ]
+    });
+    await alert.present();
   }
 
   calcularMetabolismoBasal() {
@@ -355,62 +325,31 @@ export class PerfilComponent implements OnInit {
   }
 
   calcularCaloriasFinalesPorObjetivo() {
-    this.calcularMetabolismoBasal();
-    this.calcularCaloriasRequeridas();
-  
-    const objetivo = this.objetivosUsuario.length > 0
-      ? this.objetivosUsuario[this.objetivosUsuario.length - 1]
-      : null;
-  
-    if (!objetivo || !this.perfilForm.peso) {
+    if (this.objetivosUsuario.length === 0) {
       this.caloriasFinales = this.caloriasRequeridas;
       return;
     }
-  
-    const pesoActual = this.perfilForm.peso;
-    const pesoObjetivo = objetivo.peso_objetivo;
+
+    const objetivo = this.objetivosUsuario[0];
     const velocidad = objetivo.velocidad;
-  
-    const diferencia = pesoObjetivo - pesoActual;
-    let ajuste = 0;
-  
-    if (diferencia > 0) {
-      ajuste = velocidad === 'rapido' ? 600 : 300;
-    } else if (diferencia < 0) {
-      ajuste = velocidad === 'rapido' ? -600 : -300;
+    const pesoObjetivo = objetivo.peso_objetivo;
+    const pesoActual = this.perfilForm.peso;
+
+    if (velocidad === 'pausado') {
+      this.caloriasFinales = this.caloriasRequeridas;
+    } else if (velocidad === 'lento') {
+      this.caloriasFinales = this.caloriasRequeridas - 250;
+    } else if (velocidad === 'moderado') {
+      this.caloriasFinales = this.caloriasRequeridas - 500;
+    } else if (velocidad === 'rapido') {
+      this.caloriasFinales = this.caloriasRequeridas - 1000;
     }
-  
-    this.caloriasFinales = this.caloriasRequeridas + ajuste;
   }
 
   calcularMacronutrientes() {
-  const calorias = this.caloriasFinales;
-  const actividad = this.perfilForm.actividad;
-
-  let porcentajeCarbs = 0.5;
-  let porcentajeProteinas = 0.25;
-  let porcentajeGrasas = 0.25;
-
-  switch (actividad) {
-    case 'Poco':
-      porcentajeCarbs = 0.45;
-      porcentajeProteinas = 0.25;
-      porcentajeGrasas = 0.30;
-      break;
-    case 'Moderado':
-      porcentajeCarbs = 0.50;
-      porcentajeProteinas = 0.25;
-      porcentajeGrasas = 0.25;
-      break;
-    case 'Mucho':
-      porcentajeCarbs = 0.55;
-      porcentajeProteinas = 0.25;
-      porcentajeGrasas = 0.20;
-      break;
+    this.macros.carbohidratos = Math.round((this.caloriasFinales * 0.5) / 4);
+    this.macros.proteinas = Math.round((this.caloriasFinales * 0.3) / 4);
+    this.macros.grasas = Math.round((this.caloriasFinales * 0.2) / 9);
   }
 
-  this.macros.carbohidratos = +(calorias * porcentajeCarbs / 4).toFixed(1);
-  this.macros.proteinas = +(calorias * porcentajeProteinas / 4).toFixed(1);
-  this.macros.grasas = +(calorias * porcentajeGrasas / 9).toFixed(1);
-}
 }

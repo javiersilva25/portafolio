@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { NutricionService } from 'src/app/services/nutricion.service';
-import { ModalController, ToastController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { AlimentoModalComponent } from './alimento-modal/alimento-modal.component';
 import { PerfilComponent } from '../perfil/perfil.component';
 
@@ -47,21 +47,20 @@ export class NutricionComponent implements OnInit {
   caloriasFinales = 0;
 
   ngAfterViewInit(): void {
-  setTimeout(() => {
-    this.perfilComponent.calcularCaloriasFinalesPorObjetivo();
-    this.caloriasFinales = this.perfilComponent.caloriasFinales;
-    this.perfilComponent.calcularMacronutrientes();
-    this.carbohidratosObjetivos = this.perfilComponent.macros.carbohidratos;
-    this.proteinasObjetivos = this.perfilComponent.macros.proteinas;
-    this.grasasObjetivos = this.perfilComponent.macros.grasas;
-  });
-}
-  
+    setTimeout(() => {
+      this.perfilComponent.calcularCaloriasFinalesPorObjetivo();
+      this.caloriasFinales = this.perfilComponent.caloriasFinales;
+      this.perfilComponent.calcularMacronutrientes();
+      this.carbohidratosObjetivos = this.perfilComponent.macros.carbohidratos;
+      this.proteinasObjetivos = this.perfilComponent.macros.proteinas;
+      this.grasasObjetivos = this.perfilComponent.macros.grasas;
+    });
+  }
 
   constructor(
     private nutricionService: NutricionService,
     private modalController: ModalController,
-    private toastController: ToastController
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -73,8 +72,6 @@ export class NutricionComponent implements OnInit {
       component: AlimentoModalComponent,
       componentProps: { tipo }
     });
-
-    
 
     modal.onDidDismiss().then((data) => {
       if (data.data) {
@@ -103,64 +100,63 @@ export class NutricionComponent implements OnInit {
     });
   }
 
-    cambiarFecha(dias: number) {
-      const nuevaFecha = new Date(this.fechaHoy);
-      nuevaFecha.setDate(nuevaFecha.getDate() + dias);
-      this.fechaHoy = nuevaFecha.toISOString().split('T')[0];
-      this.cargarComidasPorFecha();
+  cambiarFecha(dias: number) {
+    const nuevaFecha = new Date(this.fechaHoy);
+    nuevaFecha.setDate(nuevaFecha.getDate() + dias);
+    this.fechaHoy = nuevaFecha.toISOString().split('T')[0];
+    this.cargarComidasPorFecha();
   }
 
   guardarDia() {
-  const fecha = this.fechaHoy;
+    const fecha = this.fechaHoy;
 
-  this.tiposComida.forEach(tipo => {
-    const tieneComidas = this.comidas[tipo].length > 0;
+    this.tiposComida.forEach(tipo => {
+      const tieneComidas = this.comidas[tipo].length > 0;
 
-    this.nutricionService.deleteComidaPorFechaYTipo(fecha, tipo).subscribe({
-      next: () => {
-        if (tieneComidas) {
-          this.nutricionService.postComida({
-            tipo,
-            fecha,
-            registros: this.comidas[tipo].map((a) => ({
-              gramos: a.gramos,
-              alimento_id: a.id
-            }))
-          }).subscribe({
-            next: () => this.mostrarToast(`Comida ${tipo} actualizada`),
-            error: (err) => {
-              this.mostrarToast(`Error al guardar comida ${tipo}`, 'danger');
-              console.error(err);
-            }
-          });
-        } else {
-          this.mostrarToast(`Comida ${tipo} eliminada`);
+      this.nutricionService.deleteComidaPorFechaYTipo(fecha, tipo).subscribe({
+        next: () => {
+          if (tieneComidas) {
+            this.nutricionService.postComida({
+              tipo,
+              fecha,
+              registros: this.comidas[tipo].map((a) => ({
+                gramos: a.gramos,
+                alimento_id: a.id
+              }))
+            }).subscribe({
+              next: () => this.mostrarAlerta(`Comida ${tipo} actualizada`),
+              error: (err) => {
+                this.mostrarAlerta(`Error al guardar comida ${tipo}`, 'danger');
+                console.error(err);
+              }
+            });
+          } else {
+            this.mostrarAlerta(`Comida ${tipo} eliminada`);
+          }
+        },
+        error: (err) => {
+          console.warn(`No se pudo eliminar comida ${tipo}:`, err);
+
+          if (tieneComidas) {
+            this.nutricionService.postComida({
+              tipo,
+              fecha,
+              registros: this.comidas[tipo].map((a) => ({
+                gramos: a.gramos,
+                alimento_id: a.id
+              }))
+            }).subscribe({
+              next: () => this.mostrarAlerta(`Comida ${tipo} guardada automáticamente`),
+              error: (err) => {
+                this.mostrarAlerta(`Error al guardar comida ${tipo}`, 'danger');
+                console.error(err);
+              }
+            });
+          }
         }
-      },
-      error: (err) => {
-        console.warn(`No se pudo eliminar comida ${tipo}:`, err);
-
-        if (tieneComidas) {
-          this.nutricionService.postComida({
-            tipo,
-            fecha,
-            registros: this.comidas[tipo].map((a) => ({
-              gramos: a.gramos,
-              alimento_id: a.id
-            }))
-          }).subscribe({
-            next: () => this.mostrarToast(`Comida ${tipo} guardada automáticamente`),
-            error: (err) => {
-              this.mostrarToast(`Error al guardar comida ${tipo}`, 'danger');
-              console.error(err);
-            }
-          });
-        }
-      }
+      });
     });
-  });
-}
-
+  }
 
   cargarComidasPorFecha() {
     this.comidas = {
@@ -193,7 +189,6 @@ export class NutricionComponent implements OnInit {
   }
 
   eliminarAlimento(tipo: TipoComida, index: number) {
-    console.log('Eliminando alimento:', tipo, index);
     this.comidas[tipo].splice(index, 1);
     this.calcularTotales();
     this.guardarDia();
@@ -203,19 +198,19 @@ export class NutricionComponent implements OnInit {
     return this.tiposComida.some(tipo => this.comidas[tipo].length > 0);
   }
 
-  async mostrarToast(mensaje: string, color: string = 'green') {
-    const toast = await this.toastController.create({
+  async mostrarAlerta(mensaje: string, color: string = 'primary') {
+    const alert = await this.alertController.create({
+      header: 'Información',
       message: mensaje,
-      duration: 2000,
-      color,
-      position: 'bottom'
+      buttons: ['OK'],
+      cssClass: color === 'danger' ? 'alert-danger' : ''
     });
-    toast.present();
+    await alert.present();
   }
 
   async editarAlimento(tipo: TipoComida, index: number) {
     const alimentoActual = this.comidas[tipo][index];
-  
+
     const modal = await this.modalController.create({
       component: AlimentoModalComponent,
       componentProps: {
@@ -223,7 +218,7 @@ export class NutricionComponent implements OnInit {
         alimentoAEditar: alimentoActual
       }
     });
-  
+
     modal.onDidDismiss().then((data) => {
       if (data.data) {
         this.comidas[tipo][index] = data.data;
@@ -231,8 +226,8 @@ export class NutricionComponent implements OnInit {
         this.guardarDia();
       }
     });
-  
+
     await modal.present();
   }
-  
+
 }

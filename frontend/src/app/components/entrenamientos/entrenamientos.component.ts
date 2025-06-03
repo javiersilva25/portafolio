@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { EntrenamientoService } from '../../services/entrenamiento.service';
-import { ToastController, NavController } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 import { HistorialService } from '../../services/historial.service';
 
 @Component({
@@ -23,40 +23,39 @@ export class EntrenamientosComponent {
     peso: 0
   };
 
-  constructor(private entrenamientoService: EntrenamientoService,
-              private navCtrl: NavController,
-              private historialService: HistorialService,
-              private toastController: ToastController) {}
-              
+  constructor(
+    private entrenamientoService: EntrenamientoService,
+    private navCtrl: NavController,
+    private historialService: HistorialService,
+    private alertController: AlertController
+  ) {}
 
-  agregarEjercicio() {
-  const { nombre_ejercicio, series, repeticiones, peso } = this.ejercicioActual;
-
-  if (!nombre_ejercicio || series == null || repeticiones == null || peso == null) {
-    this.mostrarToast('Completa todos los campos del ejercicio', 'danger');
-    return;
+  async mostrarAlerta(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
-  if (series < 0 || repeticiones < 0 || peso < 0) {
-    this.mostrarToast('Los valores no pueden ser negativos', 'danger');
-    return;
+  async agregarEjercicio() {
+    const { nombre_ejercicio, series, repeticiones, peso } = this.ejercicioActual;
+
+    if (!nombre_ejercicio || series == null || repeticiones == null || peso == null) {
+      await this.mostrarAlerta('Error', 'Completa todos los campos del ejercicio.');
+      return;
+    }
+
+    if (series < 0 || repeticiones < 0 || peso < 0) {
+      await this.mostrarAlerta('Error', 'Los valores no pueden ser negativos.');
+      return;
+    }
+
+    this.rutina.ejercicios.push({ ...this.ejercicioActual });
+    this.ejercicioActual = { nombre_ejercicio: '', series: 0, repeticiones: 0, peso: 0 };
+    await this.mostrarAlerta('Éxito', 'Ejercicio agregado correctamente.');
   }
-
-  this.rutina.ejercicios.push({ ...this.ejercicioActual });
-  this.ejercicioActual = { nombre_ejercicio: '', series: 0, repeticiones: 0, peso: 0 };
-  this.mostrarToast('Ejercicio agregado');
-}
-
-  async mostrarToast(mensaje: string, color: string = 'success') {
-  const toast = await this.toastController.create({
-    message: mensaje,
-    duration: 2000,
-    color,
-    position: 'bottom'
-  });
-  await toast.present();
-}
-
 
   editarEjercicio(index: number) {
     const ejercicio = this.rutina.ejercicios[index];
@@ -68,47 +67,36 @@ export class EntrenamientosComponent {
     this.rutina.ejercicios.splice(index, 1);
   }
 
-  guardarRutina() {
+  async guardarRutina() {
     if (!this.rutina.nombre_rutina || this.rutina.ejercicios.length === 0) {
+      await this.mostrarAlerta('Error', 'Ingresa un nombre para la rutina y al menos un ejercicio.');
       return;
     }
-  
+
     this.entrenamientoService.crearEntrenamiento(this.rutina).subscribe({
       next: (response) => {
         console.log('Rutina guardada exitosamente', response);
-        
+
         this.historialService.registrarEntrenamiento(response.rutina_id).subscribe({
           next: async () => {
-            const toast = await this.toastController.create({
-              message: 'Entrenamiento registrado en historial ✅',
-              duration: 2000,
-              color: 'success'
-            });
-            toast.present();
-            
+            await this.mostrarAlerta('Éxito', 'Entrenamiento registrado en historial.');
             this.navCtrl.navigateForward('/historial');
           },
           error: async (err) => {
-            const toast = await this.toastController.create({
-              message: 'Error al registrar entrenamiento ❌',
-              duration: 2000,
-              color: 'danger'
-            });
-            toast.present();
             console.error('Error al registrar entrenamiento', err);
+            await this.mostrarAlerta('Error', 'No se pudo registrar el entrenamiento en el historial.');
           }
         });
-  
+
       },
-      error: (err) => {
+      error: async (err) => {
         console.error('Error al guardar rutina', err);
+        await this.mostrarAlerta('Error', 'No se pudo guardar la rutina. Intenta nuevamente.');
       }
     });
   }
-  
+
   goToHistorial() {
     this.navCtrl.navigateRoot('/historial');
   }
-
-  
 }
