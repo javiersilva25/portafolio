@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { EntrenamientoService } from '../../services/entrenamiento.service';
 import { NavController, AlertController } from '@ionic/angular';
 import { HistorialService } from '../../services/historial.service';
+import { EjerciciosService } from 'src/app/services/ejercicios.service';
 
 @Component({
   selector: 'app-entrenamientos',
@@ -23,11 +24,15 @@ export class EntrenamientosComponent {
     peso: 0
   };
 
+  ejerciciosDisponibles: any[] = [];
+
+
   constructor(
     private entrenamientoService: EntrenamientoService,
     private navCtrl: NavController,
     private historialService: HistorialService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private ejerciciosService: EjerciciosService
   ) {}
 
   async mostrarAlerta(header: string, message: string) {
@@ -99,4 +104,16 @@ export class EntrenamientosComponent {
   goToHistorial() {
     this.navCtrl.navigateRoot('/historial');
   }
+
+  ngOnInit() {
+    this.ejerciciosService.obtenerEjercicios().subscribe({
+      next: (data) => {
+        this.ejerciciosDisponibles = data;
+      },
+      error: (err) => {
+        console.error('Error al obtener ejercicios', err);
+      }
+    });
+  }
 }
+

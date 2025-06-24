@@ -30,8 +30,17 @@
     <ion-card-content>
       <ion-item>
         <ion-label position="floating">Nombre del Ejercicio</ion-label>
-        <ion-input [(ngModel)]="ejercicioActual.nombre_ejercicio"></ion-input>
+        <ion-select interface="popover" [(ngModel)]="ejercicioActual.nombre_ejercicio">
+          <ion-select-option *ngFor="let ejercicio of ejerciciosDisponibles" [value]="ejercicio.nombre">
+            {{ ejercicio.nombre }}
+          </ion-select-option>
+        </ion-select>
       </ion-item>
+
+
+      <datalist id="sugerenciasEjercicios">
+        <option *ngFor="let ejercicio of ejerciciosDisponibles" [value]="ejercicio.nombre"></option>
+      </datalist>
 
       <ion-item>
         <ion-label position="floating">Series</ion-label>

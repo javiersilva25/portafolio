@@ -1,4 +1,4 @@
-#!/home/javi/Documents/GitHub/portafolio/backend/fastapi-env/bin/python
+#!/home/javi/Documentos/portafolio/backend/fastapi-env/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
