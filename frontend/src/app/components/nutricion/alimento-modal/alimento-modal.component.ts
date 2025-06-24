@@ -1,6 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { NutricionService } from 'src/app/services/nutricion.service';
+import { OpenFoodFactsService } from 'src/app/services/openfoodfacts.service';
+interface Alimento {
+  id: string;
+  nombre: string;
+  calorias: number;
+  carbohidratos: number;
+  proteinas: number;
+  grasas: number;
+  externo?: boolean;
+}
+
 
 @Component({
   selector: 'app-alimento-modal',
@@ -8,6 +19,7 @@ import { NutricionService } from 'src/app/services/nutricion.service';
   styleUrls: ['./alimento-modal.component.scss'],
   standalone: false
 })
+
 export class AlimentoModalComponent implements OnInit {
 
   @Input() alimentoAEditar: any = null;
@@ -27,35 +39,39 @@ export class AlimentoModalComponent implements OnInit {
   alimentoSeleccionado: any = null;
   gramos: number = 100;
 
+  alimentosLocales: Alimento[] = [];
+  alimentosExternos: Alimento[] = [];
+  alimentosFiltrados: Alimento[] = [];
+  terminoBusqueda: string = '';
+
+
+
   constructor(
     private modalController: ModalController,
     private nutricionService: NutricionService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private openFoodFactsService: OpenFoodFactsService
   ) {}
 
   ngOnInit() {
-    this.nutricionService.getAlimentos().subscribe((data) => {
-      this.alimentos = data;
-  
-      if (this.alimentoAEditar) {
-        this.crearNuevo = false;
-        const alimentoEnLista = data.find(a => a.id === this.alimentoAEditar.id);
-        if (alimentoEnLista) {
-          this.alimentoSeleccionado = alimentoEnLista;
-        } else {
-          this.crearNuevo = true;
-          this.nuevoAlimento = {
-            nombre: this.alimentoAEditar.nombre,
-            proteinas: this.alimentoAEditar.proteinas,
-            carbohidratos: this.alimentoAEditar.carbohidratos,
-            grasas: this.alimentoAEditar.grasas,
-            calorias: this.alimentoAEditar.calorias
-          };
-        }
-        this.gramos = this.alimentoAEditar.gramos;
+  this.nutricionService.getAlimentos().subscribe((data) => {
+    this.alimentosLocales = data;
+    this.actualizarFiltrados();
+
+    if (this.alimentoAEditar) {
+      this.crearNuevo = false;
+      const alimentoEnLista = data.find(a => a.id === this.alimentoAEditar.id);
+      if (alimentoEnLista) {
+        this.alimentoSeleccionado = alimentoEnLista;
+      } else {
+        this.crearNuevo = true;
+        this.nuevoAlimento = { ...this.alimentoAEditar };
       }
-    });
-  }
+      this.gramos = this.alimentoAEditar.gramos;
+    }
+  });
+}
+
   
   calcularMacros(alimento: any, gramos: number) {
     const factor = gramos / 100;
@@ -105,24 +121,48 @@ export class AlimentoModalComponent implements OnInit {
 
     } else {
       if (!this.alimentoSeleccionado) {
-        this.mostrarToast('Selecciona un alimento', 'danger');
-        return;
-      }
+  this.mostrarToast('Selecciona un alimento', 'danger');
+  return;
+}
 
-      const a = this.alimentoSeleccionado;
-      const factor = this.gramos / 100;
-      const alimentoProcesado = {
-        id: a.id,
-        nombre: a.nombre,
-        gramos: this.gramos,
-        calorias: a.calorias * factor,
-        carbohidratos: a.carbohidratos * factor,
-        proteinas: a.proteinas * factor,
-        grasas: a.grasas * factor
-      };
-      this.modalController.dismiss(alimentoProcesado);
-    }
+const a = this.alimentoSeleccionado;
+const factor = this.gramos / 100;
+
+const procesarYGuardar = (alimentoFinal: any) => {
+  const alimentoProcesado = {
+    id: alimentoFinal.id,
+    nombre: alimentoFinal.nombre,
+    gramos: this.gramos,
+    calorias: alimentoFinal.calorias * factor,
+    carbohidratos: alimentoFinal.carbohidratos * factor,
+    proteinas: alimentoFinal.proteinas * factor,
+    grasas: alimentoFinal.grasas * factor
+  };
+  this.modalController.dismiss(alimentoProcesado);
+};
+
+if (a.externo) {
+  const alimentoAGuardar = {
+    nombre: a.nombre,
+    calorias: a.calorias,
+    proteinas: a.proteinas,
+    carbohidratos: a.carbohidratos,
+    grasas: a.grasas
+  };
+
+  this.nutricionService.postAlimento(alimentoAGuardar).subscribe((nuevo) => {
+    procesarYGuardar({
+      ...nuevo,
+      gramos: this.gramos
+    });
+  });
+
+} else {
+  procesarYGuardar(a);
+}
+
   }
+}
 
   calcularCalorias() {
     const p = this.nuevoAlimento.proteinas || 0;
@@ -143,4 +183,61 @@ export class AlimentoModalComponent implements OnInit {
     });
     await alert.present();
   }
+
+  buscarExternosYAgregar(termino: string) {
+  this.terminoBusqueda = termino.trim();
+
+  if (this.terminoBusqueda.length < 3) {
+    this.alimentosExternos = [];
+    this.actualizarFiltrados();
+    return;
+  }
+
+  this.openFoodFactsService.buscarAlimentos(this.terminoBusqueda).subscribe(response => {
+    this.alimentosExternos = response.products.map((p: any) => ({
+      id: 'ext_' + (p.code || Math.random()),
+      nombre: p.product_name || 'Producto sin nombre',
+      calorias: p.nutriments?.['energy-kcal_100g'] || 0,
+      carbohidratos: p.nutriments?.['carbohydrates_100g'] || 0,
+      proteinas: p.nutriments?.['proteins_100g'] || 0,
+      grasas: p.nutriments?.['fat_100g'] || 0,
+      externo: true
+    }));
+
+    this.actualizarFiltrados();
+  });
+}
+
+actualizarFiltrados() {
+  const termino = this.terminoBusqueda.toLowerCase();
+
+  const localesFiltrados = this.alimentosLocales.filter(a =>
+    a.nombre.toLowerCase().includes(termino)
+  );
+
+  const externosFiltrados = this.alimentosExternos.filter(a =>
+    a.nombre.toLowerCase().includes(termino)
+  );
+
+  // Evitar duplicados por nombre
+  const nombresLocales = new Set(localesFiltrados.map(a => a.nombre));
+  const externosSinDuplicar = externosFiltrados.filter(a => !nombresLocales.has(a.nombre));
+
+  this.alimentosFiltrados = [...localesFiltrados, ...externosSinDuplicar];
+}
+
+seleccionarAlimento(alimento: Alimento) {
+  this.alimentoSeleccionado = alimento;
+  this.terminoBusqueda = alimento.nombre; // opcional: mostrar lo seleccionado
+  this.alimentosFiltrados = []; // oculta el listado
+}
+
+limpiarBusqueda() {
+  this.terminoBusqueda = '';
+  this.alimentosFiltrados = [];
+}
+
+
+
+
 }
