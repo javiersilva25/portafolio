@@ -84,7 +84,7 @@ def create_perfil(
     return crud.crear_perfil(db, usuario.id, perfil)
 
 @router.put("/perfil", response_model=schemas.PerfilBase)
-def update_perfil(
+def actualizar_perfil(
     perfil: schemas.PerfilUpdate,
     db: Session = Depends(get_db),
     usuario: UsuarioToken = Depends(obtener_usuario_actual)

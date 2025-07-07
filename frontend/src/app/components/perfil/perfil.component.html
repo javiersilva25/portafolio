@@ -13,7 +13,7 @@
       <ion-card-title>Información Personal</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <form *ngIf="!perfilExiste">
+      <form>
         <ion-item>
           <ion-label position="floating">Edad</ion-label>
           <ion-input type="number" [(ngModel)]="perfilForm.edad" name="edad" required></ion-input>
@@ -43,14 +43,6 @@
         </ion-item>
         <ion-button expand="block" (click)="guardarPerfil()">Guardar Perfil</ion-button>
       </form>
-
-      <div *ngIf="perfilExiste">
-        <p><strong>Edad:</strong> {{ perfilForm.edad }}</p>
-        <p><strong>Peso:</strong> {{ perfilForm.peso }} kg</p>
-        <p><strong>Altura:</strong> {{ perfilForm.altura }} cm</p>
-        <p><strong>Sexo:</strong> {{ perfilForm.sexo | titlecase }}</p>
-        <p><strong>Actividad Física:</strong> {{ perfilForm.actividad | titlecase }}</p>
-      </div>
     </ion-card-content>
   </ion-card>
 

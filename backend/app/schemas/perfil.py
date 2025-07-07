@@ -62,6 +62,12 @@ class Perfil(PerfilBase):
     class Config:
         from_attributes = True
 
+class PerfilUpdate(BaseModel):
+    edad: Optional[int] = None
+    peso: Optional[float] = None
+    altura: Optional[float] = None
+    sexo: Optional[str] = None
+    actividad: Optional[str] = None
 
 
 

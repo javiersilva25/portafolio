@@ -30,7 +30,7 @@ export class PerfilService {
   }
 
   updatePerfil(id: number, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/perfil/${id}`, data, this.getHeaders());
+    return this.http.put(`${this.apiUrl}/perfil`, data, this.getHeaders());
   }
 
   createPerfil(data: any): Observable<any> {

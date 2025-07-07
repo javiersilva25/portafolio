@@ -81,6 +81,21 @@ def crear_perfil(db: Session, usuario_id: int, perfil: schemas.PerfilCreate):
 def obtener_perfil(db: Session, usuario_id: int):
     return db.query(Perfil).filter_by(usuario_id=usuario_id).first()
 
+def actualizar_perfil(db: Session, usuario_id: int, perfil_actualizado: schemas.PerfilUpdate):
+    perfil_existente = db.query(Perfil).filter(Perfil.usuario_id == usuario_id).first()
+    if not perfil_existente:
+        raise HTTPException(
+            status_code=404,
+            detail="Perfil no encontrado para este usuario."
+        )
+    # Actualiza solo los campos que vengan en perfil_actualizado (no None)
+    for var, value in vars(perfil_actualizado).items():
+        if value is not None:
+            setattr(perfil_existente, var, value)
+
+    db.commit()
+    db.refresh(perfil_existente)
+    return perfil_existente
 
 
 #def crear_medida(db: Session, usuario_id: int, medida: schemas.MedidaCreate):
