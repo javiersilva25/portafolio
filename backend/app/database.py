@@ -2,14 +2,18 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
+# Ruta del archivo SQLite (se creará automáticamente si no existe)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE_URL = f"sqlite:///{os.path.join(BASE_DIR, 'database.db')}"
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Crear el motor
+engine = create_engine(
+    DATABASE_URL, connect_args={"check_same_thread": False}
+)
 
-engine = create_engine(DATABASE_URL)
-
+# Configuración de sesión
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+# Clase base
 Base = declarative_base()
