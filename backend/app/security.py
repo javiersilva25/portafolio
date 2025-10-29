@@ -12,27 +12,21 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-# Try bcrypt first, fallback to sha256_crypt if bcrypt has issues
 try:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    # Test bcrypt with a simple hash to see if it works
     pwd_context.hash("test")
 except Exception:
-    # If bcrypt fails, use sha256_crypt as fallback
     pwd_context = CryptContext(schemes=["sha256_crypt"], deprecated="auto")
 
 def get_password_hash(password: str):
-    # Ensure password is truncated to 72 bytes for bcrypt compatibility
     password_bytes = password.encode('utf-8')
     if len(password_bytes) > 72:
         password_bytes = password_bytes[:72]
     
-    # Convert back to string for hashing
     safe_password = password_bytes.decode('utf-8', errors='ignore')
     return pwd_context.hash(safe_password)
 
 def verify_password(plain_password: str, hashed_password: str):
-    # Same truncation logic for verification
     plain_bytes = plain_password.encode('utf-8')
     if len(plain_bytes) > 72:
         plain_bytes = plain_bytes[:72]
